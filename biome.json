@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
+  "linter": {
+    "rules": {
+      "correctness": {
+        "noUnusedImports": "error"
+      }
+    },
+    "ignore": ["ui/components/ui"]
+  },
+  "formatter": {
+    "indentStyle": "space",
+    "lineEnding": "lf"
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded"
+    }
+  }
+}
