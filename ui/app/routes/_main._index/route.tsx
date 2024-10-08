@@ -9,6 +9,12 @@ export const meta: MetaFunction = () => {
   ]
 }
 
+/**
+ * カレンダーのように当番を管理するページ
+ * 日付と午前午後の当番担当者を表示する
+ * 土日祝日は色を変えるか、表示しない
+ * @returns
+ */
 export default function Route() {
   return (
     <main className="p-8 container space-y-4">
