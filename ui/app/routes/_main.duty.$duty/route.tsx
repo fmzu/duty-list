@@ -12,7 +12,7 @@ import { Input } from "~/components/ui/input"
 export default function Route() {
   return (
     <main className="p-8 container space-y-4">
-      <h1>{"当番作業一覧"}</h1>
+      <h1 className="font-bold">{"当番作業一覧"}</h1>
       <Link to="/">
         <Button variant={"secondary"}>
           <ArrowLeftIcon className="w-4" />

@@ -30,15 +30,15 @@ export const usersRoutes = app
     ),
     async (c) => {
       const json = c.req.valid("json")
-
+      console.log("A")
       const db = drizzle(c.env.DB)
-
+      console.log("B")
       const salt = genSaltSync(10)
 
       const hashedPassword = hashSync(json.password, salt)
 
       const userUuid = crypto.randomUUID()
-
+      console.log("C")
       await db.insert(schema.users).values({
         id: userUuid,
         email: json.email,
@@ -47,7 +47,7 @@ export const usersRoutes = app
         name: json.name,
         role: json.role,
       })
-
+      console.log("D")
       return c.json({}, {})
     },
   )

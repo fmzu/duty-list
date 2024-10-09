@@ -1,6 +1,6 @@
 #:schema ../node_modules/wrangler/config-schema.json
 
-name = "duty-list"
+name = "duty-list-api"
 main = "index.ts"
 compatibility_date = "2024-09-09"
 compatibility_flags = ["nodejs_compat"]

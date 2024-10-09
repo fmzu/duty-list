@@ -1,4 +1,4 @@
-import { relations, sql } from "drizzle-orm"
+import { sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 /**
@@ -21,12 +21,6 @@ export const duty = sqliteTable("duty", {
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .notNull()
     .default(false),
-})
-
-export const dutyRelations = relations(duty, (fn) => {
-  return {
-    user: fn.many(users),
-  }
 })
 
 export const users = sqliteTable("users", {

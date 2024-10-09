@@ -2,7 +2,7 @@ import { vValidator } from "@hono/valibot-validator"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { HTTPException } from "hono/http-exception"
-import { object, string } from "valibot"
+import { nullable, object, string } from "valibot"
 import { schema } from "~/lib/schema"
 import { apiFactory } from "../api-factory"
 
@@ -21,7 +21,7 @@ export const dutyRoutes = app
       object({
         name: string(),
         // ownerId: nullable(string()),
-        // overview: nullable(string()),
+        overview: nullable(string()),
       }),
     ),
     async (c) => {
@@ -35,7 +35,7 @@ export const dutyRoutes = app
         id: dutyId,
         name: json.name,
         // ownerId: json.ownerId,
-        // overview: json.overview,
+        overview: json.overview,
       })
 
       return c.json({})

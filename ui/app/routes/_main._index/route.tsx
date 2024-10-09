@@ -19,7 +19,7 @@ export const meta: MetaFunction = () => {
 export default function Route() {
   return (
     <main className="p-8 container space-y-4">
-      <h1>{"当番管理"}</h1>
+      <h1 className="font-bold">{"当番管理"}</h1>
       <p className="flex justify-center">{"10月"}</p>
       <div className="flex flex-col gap-y-2">
         <Link to="/duty/1">
