@@ -8,19 +8,17 @@ import { apiFactory } from "~/interface/api-factory"
 import { schema } from "~/lib/schema"
 
 const app = apiFactory.createApp()
-
 /**
  * アカウント
  * 管理者:0,一般ユーザ:1
- * 管理者はアカウントを作成、取得、修正、削除ができる
- * @deprecated
+ * 管理者はアカウントを作成、取得、修正、削除ができる = 管理者かどうかで使えるエンドポイントを分ける
  */
 export const usersRoutes = app
   /**
    * アカウントを作成する
    */
   .post(
-    "/",
+    "/users",
     vValidator(
       "json",
       object({
@@ -58,7 +56,7 @@ export const usersRoutes = app
   /**
    * たくさんのアカウントを取得する
    */
-  .get("/", async (c) => {
+  .get("/users", async (c) => {
     const db = drizzle(c.env.DB)
 
     const users = await db.select().from(schema.users)
@@ -79,7 +77,7 @@ export const usersRoutes = app
   /**
    * 一つのアカウントを取得する
    */
-  .get("/:user", async (c) => {
+  .get("/users/:user", async (c) => {
     const db = drizzle(c.env.DB)
 
     const userId = c.req.param("user")
@@ -104,7 +102,7 @@ export const usersRoutes = app
   /**
    * アカウントを更新する
    */
-  .put("/:user", async (c) => {
+  .put("/users/:user", async (c) => {
     return c.json({})
   })
   /**

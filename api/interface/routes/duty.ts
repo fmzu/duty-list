@@ -13,38 +13,38 @@ const app = apiFactory.createApp()
  */
 export const dutyRoutes = app
   /**
-   * 複数の講義を取得する
+   * 複数の当番を取得する
    */
-  .get("/programs", async (c) => {
+  .get("/duty", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const programs = await db.query.programs.findMany()
+    const duty = await db.query.duty.findMany()
 
-    const programsJson = programs.map((program) => {
+    const dutyJson = duty.map((duty) => {
       return {
-        ...program,
+        ...duty,
       }
     })
 
-    return c.json(programsJson)
+    return c.json(dutyJson)
   })
   /**
-   * 任意の講義を取得する
+   * 任意の当番を取得する
    */
-  .get("/programs/:program", async (c) => {
+  .get("/duty/:duty", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const programId = c.req.param("program")
+    const dutyId = c.req.param("duty")
 
-    const program = await db.query.programs.findFirst({
-      where: eq(schema.programs.id, programId),
+    const duty = await db.query.duty.findFirst({
+      where: eq(schema.duty.id, dutyId),
     })
 
-    if (program === undefined) {
+    if (duty === undefined) {
       throw new HTTPException(404, { message: "Not found" })
     }
 
-    const programJson = { ...program }
+    const dutyJson = { ...duty }
 
-    return c.json(programJson)
+    return c.json(dutyJson)
   })

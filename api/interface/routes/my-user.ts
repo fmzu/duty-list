@@ -5,10 +5,12 @@ import { schema } from "~/lib/schema"
 import { apiFactory } from "../api-factory"
 
 const app = apiFactory.createApp()
-
+/**
+ * 自分のアカウントを取得、パスワードの修正をする
+ */
 export const myUserRoutes = app
   /**
-   * 自分のユーザーを取得する
+   * 自分のアカウントを取得する
    */
   .get("my/user", async (c) => {
     const db = drizzle(c.env.DB, { schema })
