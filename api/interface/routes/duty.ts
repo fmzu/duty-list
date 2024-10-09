@@ -6,10 +6,12 @@ import { apiFactory } from "../api-factory"
 
 const app = apiFactory.createApp()
 /**
- * 指定の時間枠に存在する講義
- * 作成や編集はない
+ * 当番
+ * 当番作業の追加、取得（複数、一つ）、修正、削除
+ * 管理者は当番作業をの操作をすべて行うことができる
+ * 一般ユーザは当番作業の取得のみ行うことができる
  */
-export const programsRoutes = app
+export const dutyRoutes = app
   /**
    * 複数の講義を取得する
    */

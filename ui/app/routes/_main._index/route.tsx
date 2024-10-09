@@ -13,6 +13,7 @@ export const meta: MetaFunction = () => {
  * カレンダーのように当番を管理するページ
  * 日付と午前午後の当番担当者を表示する
  * 土日祝日は色を変えるか、表示しない
+ * Linkで囲ったらspace-y-4が効かなくなった
  * @returns
  */
 export default function Route() {
@@ -20,7 +21,7 @@ export default function Route() {
     <main className="p-8 container space-y-4">
       <h1>{"当番管理"}</h1>
       <p className="flex justify-center">{"10月"}</p>
-      <div>
+      <div className="flex flex-col gap-y-2">
         <Link to="/duty/1">
           <DutyCard />
         </Link>

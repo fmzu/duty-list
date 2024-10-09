@@ -8,7 +8,7 @@ const app = apiFactory.createApp()
 
 export const myUserRoutes = app
   /**
-   * 任意のユーザーを取得する
+   * 自分のユーザーを取得する
    */
   .get("my/user", async (c) => {
     const db = drizzle(c.env.DB, { schema })
@@ -34,7 +34,7 @@ export const myUserRoutes = app
     return c.json(userJson)
   })
   /**
-   * 任意のユーザーを修正する
+   * 自分のユーザーパスワードを修正する
    */
   .put("my-user/:my-user", async (c) => {
     return c.json({})

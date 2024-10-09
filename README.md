@@ -1,7 +1,8 @@
+
 ```
 bun run --cwd api dev
 bun run --cwd ui dev
-
+```
 
 デプロイ(どっちもdeployするときはapiの方から順番に)
 

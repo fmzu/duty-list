@@ -9,10 +9,15 @@ import { schema } from "~/lib/schema"
 
 const app = apiFactory.createApp()
 
+/**
+ * アカウント
+ * 管理者:0,一般ユーザ:1
+ * 管理者はアカウントを作成、取得、修正、削除ができる
+ * @deprecated
+ */
 export const usersRoutes = app
   /**
    * アカウントを作成する
-   * @deprecated
    */
   .post(
     "/",
@@ -34,8 +39,7 @@ export const usersRoutes = app
 
       const userUuid = crypto.randomUUID()
       /**
-       * 0: 学生，1: 教員，2: 管理者
-       * あとでオブジェクトにする
+       * 管理者:0,一般ユーザ:1
        */
       const roll = 0
 
