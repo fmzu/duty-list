@@ -1,6 +1,8 @@
+import { vValidator } from "@hono/valibot-validator"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { HTTPException } from "hono/http-exception"
+import { object, string } from "valibot"
 import { schema } from "~/lib/schema"
 import { apiFactory } from "../api-factory"
 
@@ -12,6 +14,33 @@ const app = apiFactory.createApp()
  * 一般ユーザは当番作業の取得のみ行うことができる
  */
 export const dutyRoutes = app
+  .post(
+    "/duty",
+    vValidator(
+      "json",
+      object({
+        name: string(),
+        // ownerId: nullable(string()),
+        // overview: nullable(string()),
+      }),
+    ),
+    async (c) => {
+      const json = c.req.valid("json")
+
+      const db = drizzle(c.env.DB)
+
+      const dutyId = crypto.randomUUID()
+
+      await db.insert(schema.duty).values({
+        id: dutyId,
+        name: json.name,
+        // ownerId: json.ownerId,
+        // overview: json.overview,
+      })
+
+      return c.json({})
+    },
+  )
   /**
    * 複数の当番を取得する
    */
@@ -47,4 +76,25 @@ export const dutyRoutes = app
     const dutyJson = { ...duty }
 
     return c.json(dutyJson)
+  })
+  /**
+   * 任意の当番を修正する
+   */
+  .put("/duty/:duty", async (c) => {
+    return c.json({})
+  })
+  /**
+   * 任意の当番を削除する
+   */
+  .put("/duty/:duty", async (c) => {
+    const db = drizzle(c.env.DB)
+
+    const dutyId = c.req.param("duty")
+
+    await db
+      .update(schema.duty)
+      .set({ isDeleted: true })
+      .where(eq(schema.duty.id, dutyId))
+
+    return c.json({})
   })

@@ -3,7 +3,7 @@ import { genSaltSync, hashSync } from "bcrypt-ts"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { HTTPException } from "hono/http-exception"
-import { object, string } from "valibot"
+import { number, object, string } from "valibot"
 import { apiFactory } from "~/interface/api-factory"
 import { schema } from "~/lib/schema"
 
@@ -24,6 +24,8 @@ export const usersRoutes = app
       object({
         email: string(),
         password: string(),
+        name: string(),
+        role: number(),
       }),
     ),
     async (c) => {
@@ -36,18 +38,14 @@ export const usersRoutes = app
       const hashedPassword = hashSync(json.password, salt)
 
       const userUuid = crypto.randomUUID()
-      /**
-       * 管理者:0,一般ユーザ:1
-       */
-      const roll = 0
 
       await db.insert(schema.users).values({
         id: userUuid,
         email: json.email,
         hashedPassword: hashedPassword,
         login: crypto.randomUUID(),
-        name: crypto.randomUUID(),
-        role: roll,
+        name: json.name,
+        role: json.role,
       })
 
       return c.json({}, {})
@@ -108,15 +106,15 @@ export const usersRoutes = app
   /**
    * アカウントを削除する
    */
-  .put(
-    "/:user",
-    vValidator(
-      "json",
-      object({
-        id: string(),
-      }),
-    ),
-    async (c) => {
-      return c.json({})
-    },
-  )
+  .put("/users/:user", async (c) => {
+    const db = drizzle(c.env.DB)
+
+    const userId = c.req.param("user")
+
+    await db
+      .update(schema.users)
+      .set({ isDeleted: true })
+      .where(eq(schema.users.id, userId))
+
+    return c.json({})
+  })
