@@ -15,7 +15,6 @@
     "cf-typegen": "wrangler types"
   },
   "dependencies": {
-    "@hono/auth-js": "^1.0.10",
     "@radix-ui/react-checkbox": "^1.1.2",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-slot": "^1.1.0",
