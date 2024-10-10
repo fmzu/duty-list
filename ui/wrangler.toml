@@ -6,4 +6,4 @@ pages_build_output_dir = "./build/client"
 
 [[services]]
 binding = "API"
-service = "duty-list"
+service = "duty-list-api"

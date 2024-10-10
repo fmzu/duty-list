@@ -10,7 +10,7 @@ import { Input } from "~/components/ui/input"
  * ボタン押したらページ開いてる人の名前が入るようにする
  * @returns
  */
-export function Route() {
+export default function Route() {
   return (
     <main className="p-8 container space-y-4">
       <h1 className="font-bold">{"当番作業一覧"}</h1>

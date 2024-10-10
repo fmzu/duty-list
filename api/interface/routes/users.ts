@@ -56,20 +56,20 @@ export const usersRoutes = app
    */
   .get("/users", async (c) => {
     const db = drizzle(c.env.DB)
-
+    console.log("gets-A")
     const users = await db.select().from(schema.users)
-
+    console.log("gets-B")
     if (users === undefined) {
       throw new HTTPException(500, { message: "Not Found" })
     }
-
+    console.log("gets-C")
     const usersJson = users.map((user) => {
       return {
         id: user.id,
         name: user.name,
       }
     })
-
+    console.log("gets-D")
     return c.json(usersJson)
   })
   /**
@@ -77,24 +77,24 @@ export const usersRoutes = app
    */
   .get("/users/:user", async (c) => {
     const db = drizzle(c.env.DB)
-
+    console.log("get-A")
     const userId = c.req.param("user")
-
+    console.log("get-B")
     const user = await db
       .select()
       .from(schema.users)
       .where(eq(schema.users.id, userId))
       .get()
-
+    console.log("get-C")
     if (user === undefined) {
       throw new HTTPException(500, { message: "Not Found" })
     }
-
+    console.log("get-D")
     const userJson = {
       id: user.id,
       name: user.name,
     }
-
+    console.log("get-E")
     return c.json(userJson)
   })
   /**

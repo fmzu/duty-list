@@ -36,13 +36,14 @@ export default function Route() {
 
   const onSubmit = () => {
     const result = mutation.mutate()
-    console.log("A", result)
 
     if (result === null) {
-      alert("登録？？")
+      alert("アカウント登録に失敗しました")
       navigate("/sign/in")
       return
     }
+    alert("アカウント登録に成功しました")
+    navigate("/sign/in")
   }
 
   return (
