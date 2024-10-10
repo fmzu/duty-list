@@ -1,20 +1,18 @@
-import { useNavigate } from "@remix-run/react"
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { Button } from "~/components/ui/button"
+import { Card } from "~/components/ui/card"
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
 
-export default function Route() {
-  const navigate = useNavigate()
-
+export function UserRegistrationCard() {
   const [loginId, setLoginId] = useState("")
 
   const [password, setPassword] = useState("")
 
-  const [name, setName] = useState("")
+  const [role, setRole] = useState(0)
 
-  const [role, setRole] = useState(1)
+  const [name, setName] = useState("")
 
   const mutation = useMutation({
     async mutationFn() {
@@ -26,28 +24,22 @@ export default function Route() {
           // role: role,
         },
       })
-
       const json = await resp.json()
-
       return json
     },
   })
 
   const onSubmit = () => {
     const result = mutation.mutate()
-
+    alert("アカウントを作成しました")
     if (result === null) {
-      alert("アカウント登録に失敗しました")
-      navigate("/sign/in")
       return
     }
-    alert("アカウント登録に成功しました")
-    navigate("/sign/in")
   }
 
   return (
-    <div className={"mx-auto max-w-xs space-y-4 p-4 pt-40"}>
-      <h1 className="font-bold">{"新しいアカウント"}</h1>
+    <Card className="p-4 space-y-4">
+      <p>{"新しいアカウント"}</p>
       <form
         className="space-y-2"
         onSubmit={(event) => {
@@ -71,7 +63,7 @@ export default function Route() {
             setPassword(event.target.value)
           }}
         />
-        {/* <Input
+        <Input
           type={"text"}
           placeholder="名前"
           value={name}
@@ -86,11 +78,11 @@ export default function Route() {
           onChange={(event) => {
             setRole(event.target.valueAsNumber)
           }}
-        /> */}
+        />
         <Button type={"submit"} className="w-full">
           {"登録する"}
         </Button>
       </form>
-    </div>
+    </Card>
   )
 }

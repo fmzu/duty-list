@@ -9,51 +9,18 @@ import { schema } from "~/lib/schema"
 import { apiFactory } from "../api-factory"
 
 const app = apiFactory.createApp()
-/**
- * 自分のアカウントを取得、パスワードの修正をする
- */
+
 export const myUserRoutes = app
   /**
-   * 自分のアカウントを取得する
+   * 任意のユーザーを取得する
    */
-  .get("my/user", async (c) => {
-    const db = drizzle(c.env.DB, { schema })
-
-    const auth = c.get("authUser")
-
-    const authUserEmail = auth.token?.email ?? null
-
-    if (authUserEmail === null) {
-      throw new HTTPException(401, { message: "Unauthorized" })
-    }
-
-    const user = await db.query.users.findFirst({
-      where: eq(schema.users.email, authUserEmail),
-    })
-
-    if (user === undefined) {
-      throw new HTTPException(404, { message: "Not found" })
-    }
-
-    const userJson = { ...user }
-
-    return c.json(userJson)
-  })
-  /**
-   * 自分のユーザーパスワードを更新する
-   */
-  .put(
-    "my/user",
-    vValidator(
-      "json",
-      object({
-        password: string(),
-      }),
-    ),
+  .get(
+    "/my/user",
+    /**
+     * verifyAuth()がログイン認証を行っている
+     */
     verifyAuth(),
     async (c) => {
-      const json = c.req.valid("json")
-
       const db = drizzle(c.env.DB, { schema })
 
       const auth = c.get("authUser")
@@ -72,6 +39,53 @@ export const myUserRoutes = app
         throw new HTTPException(404, { message: "Not found" })
       }
 
+      const userJson = { ...user }
+
+      return c.json(userJson)
+    },
+  )
+  /**
+   * 任意のユーザーを修正する
+   * パスワードの変更
+   */
+  .put(
+    "/my/user",
+    /**
+     * verifyAuth()はバリデートの前じゃないとエラー出る！↓
+     * TypeError: This ReadableStream is disturbed (has already been read from), and cannot be used as a body.
+     */
+    verifyAuth(),
+    vValidator(
+      "json",
+      object({
+        password: string(),
+      }),
+    ),
+    verifyAuth(),
+    async (c) => {
+      const json = c.req.valid("json")
+      console.log("A", json)
+
+      const db = drizzle(c.env.DB, { schema })
+      console.log("B", db)
+
+      const auth = c.get("authUser")
+      console.log("C", auth)
+
+      const authUserEmail = auth.token?.email ?? null
+      console.log("D", authUserEmail)
+      if (authUserEmail === null) {
+        throw new HTTPException(401, { message: "Unauthorized" })
+      }
+      console.log("E", authUserEmail)
+      const user = await db.query.users.findFirst({
+        where: eq(schema.users.email, authUserEmail),
+      })
+      console.log("F", user)
+      if (user === undefined) {
+        throw new HTTPException(404, { message: "Not found" })
+      }
+      console.log("G", user)
       /**
        * パスワードをハッシュ化する
        */

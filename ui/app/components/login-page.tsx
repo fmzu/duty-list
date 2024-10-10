@@ -2,10 +2,11 @@ import { signIn } from "@hono/auth-js/react"
 import { useNavigate } from "@remix-run/react"
 import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
+import { toast } from "sonner"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 
-export default function Route() {
+export function LoginPage() {
   const navigate = useNavigate()
 
   const [loginId, setLoginId] = useState("")
@@ -14,17 +15,14 @@ export default function Route() {
 
   const mutation = useMutation({
     async mutationFn() {
-      console.log("A")
       const resp = await signIn("credentials", {
         email: loginId,
         password: password,
         redirect: false,
       })
-      console.log("B", resp?.status)
       if (resp?.status !== 200) {
         return "ログインに失敗しました"
       }
-      console.log("C")
       return null
     },
   })
@@ -32,16 +30,15 @@ export default function Route() {
   const onSubmit = async () => {
     const result = await mutation.mutateAsync()
     if (result === null) {
+      navigate("/")
       return
     }
-    console.log("D", result)
-    alert(result)
-    navigate("/sign/in")
+    toast(result)
   }
 
   return (
     <div className={"mx-auto max-w-xs space-y-4 p-4 pt-40"}>
-      <h1 className="font-bold">{"N"}</h1>
+      <h1 className="font-bold">{"TIMETABLE"}</h1>
       <form
         className="space-y-2"
         onSubmit={(event) => {
@@ -50,20 +47,16 @@ export default function Route() {
         }}
       >
         <Input
-          type={"email"}
+          type="email"
           placeholder="メールアドレス"
           value={loginId}
-          onChange={(event) => {
-            setLoginId(event.target.value)
-          }}
+          onChange={(event) => setLoginId(event.target.value)}
         />
         <Input
-          type={"password"}
+          type="password"
           placeholder="パスワード"
           value={password}
-          onChange={(event) => {
-            setPassword(event.target.value)
-          }}
+          onChange={(event) => setPassword(event.target.value)}
         />
         <Button type="submit" className="w-full">
           {"ログイン"}

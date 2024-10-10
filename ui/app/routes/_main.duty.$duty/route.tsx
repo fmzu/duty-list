@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react"
 import { ArrowLeftIcon } from "lucide-react"
 import { Button } from "~/components/ui/button"
-import { Checkbox } from "~/components/ui/checkbox"
+// import { Checkbox } from "~/components/ui/checkbox"
 import { Input } from "~/components/ui/input"
 
 /**
@@ -27,7 +27,7 @@ export default function Route() {
         <p>{"午後"}</p>
         <Input placeholder="担当者" />
       </div>
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <div className="flex items-center space-x-2">
           <Checkbox id="terms" />
           <label htmlFor="terms">{"花の水やり"}</label>
@@ -40,7 +40,7 @@ export default function Route() {
           <Checkbox id="terms" />
           <label htmlFor="terms">{"花の水やり"}</label>
         </div>
-      </div>
+      </div> */}
     </main>
   )
 }

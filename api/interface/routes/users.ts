@@ -3,19 +3,16 @@ import { genSaltSync, hashSync } from "bcrypt-ts"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { HTTPException } from "hono/http-exception"
-import { number, object, string } from "valibot"
+import { object, string } from "valibot"
 import { apiFactory } from "~/interface/api-factory"
 import { schema } from "~/lib/schema"
 
 const app = apiFactory.createApp()
-/**
- * アカウント
- * 管理者:0,一般ユーザ:1
- * 管理者はアカウントを作成、取得、修正、削除ができる = 管理者かどうかで使えるエンドポイントを分ける
- */
+
 export const usersRoutes = app
   /**
    * アカウントを作成する
+   * @deprecated
    */
   .post(
     "/users",
@@ -24,30 +21,34 @@ export const usersRoutes = app
       object({
         email: string(),
         password: string(),
-        name: string(),
-        role: number(),
       }),
     ),
     async (c) => {
       const json = c.req.valid("json")
-      console.log("A")
+
       const db = drizzle(c.env.DB)
-      console.log("B")
+      /**
+       * パスワードをハッシュ化する
+       */
       const salt = genSaltSync(10)
 
       const hashedPassword = hashSync(json.password, salt)
 
       const userUuid = crypto.randomUUID()
-      console.log("C")
+      /**
+       * 0: 学生，1: 教員，2: 管理者
+       */
+      const roll = 0
+
       await db.insert(schema.users).values({
         id: userUuid,
         email: json.email,
         hashedPassword: hashedPassword,
         login: crypto.randomUUID(),
-        name: json.name,
-        role: json.role,
+        name: crypto.randomUUID(),
+        role: roll,
       })
-      console.log("D")
+
       return c.json({}, {})
     },
   )
@@ -56,20 +57,20 @@ export const usersRoutes = app
    */
   .get("/users", async (c) => {
     const db = drizzle(c.env.DB)
-    console.log("gets-A")
+
     const users = await db.select().from(schema.users)
-    console.log("gets-B")
+
     if (users === undefined) {
       throw new HTTPException(500, { message: "Not Found" })
     }
-    console.log("gets-C")
+
     const usersJson = users.map((user) => {
       return {
         id: user.id,
         name: user.name,
       }
     })
-    console.log("gets-D")
+
     return c.json(usersJson)
   })
   /**
@@ -77,24 +78,24 @@ export const usersRoutes = app
    */
   .get("/users/:user", async (c) => {
     const db = drizzle(c.env.DB)
-    console.log("get-A")
+
     const userId = c.req.param("user")
-    console.log("get-B")
+
     const user = await db
       .select()
       .from(schema.users)
       .where(eq(schema.users.id, userId))
       .get()
-    console.log("get-C")
+
     if (user === undefined) {
       throw new HTTPException(500, { message: "Not Found" })
     }
-    console.log("get-D")
+
     const userJson = {
       id: user.id,
       name: user.name,
     }
-    console.log("get-E")
+
     return c.json(userJson)
   })
   /**
@@ -106,7 +107,7 @@ export const usersRoutes = app
   /**
    * アカウントを削除する
    */
-  .put("/users/:user", async (c) => {
+  .delete("/users/:user", async (c) => {
     const db = drizzle(c.env.DB)
 
     const userId = c.req.param("user")
