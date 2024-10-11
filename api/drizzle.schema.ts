@@ -1,56 +1,34 @@
-import { relations, sql } from "drizzle-orm"
+import { sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 /**
  * 授業情報
  */
-export const programs = sqliteTable("programs", {
+export const duty = sqliteTable("duty", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   /**
-   * 時間枠（時間）
+   * 時間枠（午前とか午後とか）
    */
-  timeSlot: integer("time_slot").notNull(),
+  timeSlot: integer("time_slot"),
   /**
-   * 時間枠（曜日）
+   * 時間枠（曜日が決まっているものがあれば）
    */
-  weekSlot: integer("week_slot").notNull(),
+  weekSlot: integer("week_slot"),
   /**
-   * 担当教員
+   * 当番担当者
    */
-  ownerId: text("owner_id", { length: 36 }).notNull(),
+  ownerId: text("owner_id", { length: 36 }),
   /**
-   * 単位数
+   * 当番説明
    */
-  unitsCount: integer("units_count").notNull(),
-  /**
-   * 授業概要
-   */
-  overview: text("overview", { length: 2048 }).notNull(),
-  /**
-   * 実施時期（年度）
-   */
-  year: integer("year").notNull(),
-  /**
-   * 実施時期（前期後期）
-   */
-  period: integer("period").notNull(),
+  overview: text("overview", { length: 2048 }),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .notNull()
     .default(false),
-})
-
-export const programRelations = relations(programs, (fn) => {
-  return {
-    enrollments: fn.many(enrollments),
-    owner: fn.one(users, {
-      fields: [programs.ownerId],
-      references: [users.id],
-    }),
-  }
 })
 
 export const users = sqliteTable("users", {
@@ -61,47 +39,11 @@ export const users = sqliteTable("users", {
   login: text("login", { length: 256 }).notNull().unique(),
   /**
    * ユーザの役職
-   * 0: 学生
-   * 1: 教員
-   * 2: 管理者など
+   * 0: 管理者
+   * 1: 一般ユーザ
    */
   role: integer("role").notNull(),
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .notNull()
     .default(false),
-})
-
-export const userRelations = relations(users, (fn) => {
-  return {
-    enrollments: fn.many(enrollments),
-    programs: fn.many(programs),
-  }
-})
-
-/**
- * 講義の受講登録
- */
-export const enrollments = sqliteTable("enrollments", {
-  id: text("uuid", { length: 36 }).notNull().unique(),
-  userId: text("user_id", { length: 36 }).notNull(),
-  programId: text("program_id", { length: 36 }).notNull(),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
-  isDeleted: integer("is_deleted", { mode: "boolean" })
-    .notNull()
-    .default(false),
-})
-
-export const enrollmentRelations = relations(enrollments, (fn) => {
-  return {
-    user: fn.one(users, {
-      fields: [enrollments.userId],
-      references: [users.id],
-    }),
-    program: fn.one(programs, {
-      fields: [enrollments.programId],
-      references: [programs.id],
-    }),
-  }
 })

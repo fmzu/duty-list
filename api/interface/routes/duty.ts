@@ -34,7 +34,6 @@ export const dutyRoutes = app
       await db.insert(schema.duty).values({
         id: dutyId,
         name: json.name,
-        // ownerId: json.ownerId,
         overview: json.overview,
       })
 

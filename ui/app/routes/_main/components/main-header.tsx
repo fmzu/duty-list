@@ -1,5 +1,6 @@
 import { signOut } from "@hono/auth-js/react"
-import { useLocation } from "@remix-run/react"
+import { Link, useLocation } from "@remix-run/react"
+import { House } from "lucide-react"
 import { Button } from "~/components/ui/button"
 
 export default function MainHeader() {
@@ -9,7 +10,12 @@ export default function MainHeader() {
   // 今いるページと同じパスのボタンを黒くする
 
   return (
-    <header className="p-4 bg-gray-300 flex justify-end">
+    <header className="py-4 px-8 bg-gray-300 flex justify-between">
+      <Link to="/">
+        <Button variant={"secondary"}>
+          <House className="w-4" />
+        </Button>
+      </Link>
       <div className="flex gap-x-2">
         <Button
           className="flex space-x-2 w-full"

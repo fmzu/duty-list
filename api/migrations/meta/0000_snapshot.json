@@ -1,65 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e46752d8-ed94-43c7-a03b-6c337d30321b",
+  "id": "db2236e1-5ddc-44b1-8394-13acc53231f5",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "enrollments": {
-      "name": "enrollments",
-      "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "text(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "program_id": {
-          "name": "program_id",
-          "type": "text(36)",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "is_deleted": {
-          "name": "is_deleted",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": false
-        }
-      },
-      "indexes": {
-        "enrollments_uuid_unique": {
-          "name": "enrollments_uuid_unique",
-          "columns": [
-            "uuid"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "programs": {
-      "name": "programs",
+    "duty": {
+      "name": "duty",
       "columns": {
         "uuid": {
           "name": "uuid",
@@ -79,49 +25,28 @@
           "name": "time_slot",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "week_slot": {
           "name": "week_slot",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "owner_id": {
           "name": "owner_id",
           "type": "text(36)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "units_count": {
-          "name": "units_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "overview": {
           "name": "overview",
           "type": "text(2048)",
           "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "year": {
-          "name": "year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "period": {
-          "name": "period",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "created_at": {
@@ -142,8 +67,8 @@
         }
       },
       "indexes": {
-        "programs_uuid_unique": {
-          "name": "programs_uuid_unique",
+        "duty_uuid_unique": {
+          "name": "duty_uuid_unique",
           "columns": [
             "uuid"
           ],

@@ -8,4 +8,4 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "duty-list"
-database_id = "e440b623-3262-408a-a096-506aa8e4a276"
+database_id ="ec9809c8-b7bb-4212-b10c-ed713815ff3b"
