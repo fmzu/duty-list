@@ -7,10 +7,8 @@ export default function MainHeader() {
   // 今いるページを取得する
   const location = useLocation()
 
-  // 今いるページと同じパスのボタンを黒くする
-
   return (
-    <header className="py-4 px-8 bg-gray-300 flex justify-between">
+    <header className="py-4 px-8 bg-gray-200 flex justify-between">
       <Link to="/">
         <Button variant={"secondary"}>
           <House className="w-4" />

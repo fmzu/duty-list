@@ -41,6 +41,7 @@ export default function Route() {
       navigate("/sign/in")
       return
     }
+
     alert("アカウント登録に成功しました")
     navigate("/sign/in")
   }

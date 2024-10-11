@@ -1,46 +1,41 @@
-import { useMutation } from "@tanstack/react-query"
-import { useState } from "react"
-import { Button } from "~/components/ui/button"
 import { Card } from "~/components/ui/card"
-import { Input } from "~/components/ui/input"
-import { client } from "~/lib/client"
 
 export function UserRegistrationCard() {
-  const [loginId, setLoginId] = useState("")
+  // const [loginId, setLoginId] = useState("")
 
-  const [password, setPassword] = useState("")
+  // const [password, setPassword] = useState("")
 
-  const [role, setRole] = useState(0)
+  // const [role, setRole] = useState(0)
 
-  const [name, setName] = useState("")
+  // const [name, setName] = useState("")
 
-  const mutation = useMutation({
-    async mutationFn() {
-      const resp = await client.api.users.$post({
-        json: {
-          email: loginId,
-          password: password,
-          // name: name,
-          // role: role,
-        },
-      })
-      const json = await resp.json()
-      return json
-    },
-  })
+  // const mutation = useMutation({
+  //   async mutationFn() {
+  //     const resp = await client.api.users.$post({
+  //       json: {
+  //         email: loginId,
+  //         password: password,
+  //         // name: name,
+  //         // role: role,
+  //       },
+  //     })
+  //     const json = await resp.json()
+  //     return json
+  //   },
+  // })
 
-  const onSubmit = () => {
-    const result = mutation.mutate()
-    alert("アカウントを作成しました")
-    if (result === null) {
-      return
-    }
-  }
+  // const onSubmit = () => {
+  //   const result = mutation.mutate()
+  //   alert("アカウントを作成しました")
+  //   if (result === null) {
+  //     return
+  //   }
+  // }
 
   return (
     <Card className="p-4 space-y-4">
       <p>{"新しいアカウント"}</p>
-      <form
+      {/* <form
         className="space-y-2"
         onSubmit={(event) => {
           event.preventDefault()
@@ -82,7 +77,7 @@ export function UserRegistrationCard() {
         <Button type={"submit"} className="w-full">
           {"登録する"}
         </Button>
-      </form>
+      </form> */}
     </Card>
   )
 }
