@@ -43,6 +43,20 @@ export const users = sqliteTable("users", {
    * 1: 一般ユーザ
    */
   role: integer("role").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  isDeleted: integer("is_deleted", { mode: "boolean" })
+    .notNull()
+    .default(false),
+})
+
+export const tags = sqliteTable("tags", {
+  id: text("uuid", { length: 36 }).notNull().unique(),
+  name: text("name", { length: 256 }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .notNull()
     .default(false),
