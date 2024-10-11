@@ -1,10 +1,12 @@
 import { type LoaderFunctionArgs, json } from "@remix-run/cloudflare"
 import { useLoaderData } from "@remix-run/react"
-import { Checkbox } from "~/components/ui/checkbox"
 import { Input } from "~/components/ui/input"
+import {} from "~/components/ui/select"
 import { loaderClient } from "~/lib/loader-client"
+import { DutyCheckbox } from "~/routes/_main.roster.$roster/components/duty-checkbox"
 
 /**
+ * ページIDを日付にする
  * チェックリストの当番作業一覧を表示する
  * この中で本日の担当を登録することができる
  * ボタン押したらページ開いてる人の名前が入るようにする
@@ -38,12 +40,12 @@ export default function Route() {
       </div>
       <div className="space-y-2">
         {data.map((duty) => (
-          <div key={duty.id} className="flex items-center space-x-2">
-            <Checkbox id={duty.id} className="items-center" />
-            <label htmlFor={duty.id} className="font-bold text-lg items-center">
-              {duty.name}
-            </label>
-          </div>
+          <DutyCheckbox
+            key={duty.id}
+            id={duty.id}
+            name={duty.name}
+            overview={duty.overview}
+          />
         ))}
       </div>
     </main>

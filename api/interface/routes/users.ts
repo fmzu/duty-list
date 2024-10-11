@@ -3,7 +3,7 @@ import { genSaltSync, hashSync } from "bcrypt-ts"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { HTTPException } from "hono/http-exception"
-import { object, string } from "valibot"
+import { number, object, string } from "valibot"
 import { apiFactory } from "~/interface/api-factory"
 import { schema } from "~/lib/schema"
 
@@ -21,6 +21,8 @@ export const usersRoutes = app
       object({
         email: string(),
         password: string(),
+        name: string(),
+        role: number(),
       }),
     ),
     async (c) => {
@@ -35,18 +37,14 @@ export const usersRoutes = app
       const hashedPassword = hashSync(json.password, salt)
 
       const userUuid = crypto.randomUUID()
-      /**
-       * 0: 学生，1: 教員，2: 管理者
-       */
-      const roll = 0
 
       await db.insert(schema.users).values({
         id: userUuid,
         email: json.email,
         hashedPassword: hashedPassword,
         login: crypto.randomUUID(),
-        name: crypto.randomUUID(),
-        role: roll,
+        name: json.name,
+        role: json.role,
       })
 
       return c.json({}, {})
@@ -57,20 +55,21 @@ export const usersRoutes = app
    */
   .get("/users", async (c) => {
     const db = drizzle(c.env.DB)
-
+    console.log("A")
     const users = await db.select().from(schema.users)
-
+    console.log("B")
     if (users === undefined) {
       throw new HTTPException(500, { message: "Not Found" })
     }
-
+    console.log("C")
     const usersJson = users.map((user) => {
       return {
         id: user.id,
         name: user.name,
+        role: user.role,
       }
     })
-
+    console.log("D")
     return c.json(usersJson)
   })
   /**

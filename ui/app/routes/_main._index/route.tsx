@@ -28,19 +28,19 @@ export default function Route() {
         <ChevronRight />
       </div>
       <div className="flex flex-col gap-y-2">
-        <Link to="/duty/1">
+        <Link to="/roster/1">
           <DutyCard />
         </Link>
-        <Link to="/duty/2">
+        <Link to="/roster/2">
           <DutyCard />
         </Link>
-        <Link to="/duty/3">
+        <Link to="/roster/3">
           <DutyCard />
         </Link>
-        <Link to="/duty/4">
+        <Link to="/roster/4">
           <DutyCard />
         </Link>
-        <Link to="/duty/5">
+        <Link to="/roster/5">
           <DutyCard />
         </Link>
       </div>

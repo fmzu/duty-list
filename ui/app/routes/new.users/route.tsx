@@ -24,8 +24,8 @@ export default function Route() {
         json: {
           email: loginId,
           password: password,
-          // name: name,
-          // role: role,
+          name: name,
+          role: role,
         },
       })
       const json = await resp.json()

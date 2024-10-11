@@ -8,6 +8,13 @@
       "when": 1728615598996,
       "tag": "0000_salty_wolf_cub",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1728635896869,
+      "tag": "0001_strong_swordsman",
+      "breakpoints": true
     }
   ]
 }
