@@ -6,7 +6,7 @@ type Props = {
   overview: string | null
 }
 
-export function DutyCheckbox(props: Props) {
+export function TaskCheckbox(props: Props) {
   return (
     <div>
       <div className="flex items-center space-x-2">

@@ -55,13 +55,13 @@ export const usersRoutes = app
    */
   .get("/users", async (c) => {
     const db = drizzle(c.env.DB)
-    console.log("A")
+
     const users = await db.select().from(schema.users)
-    console.log("B")
+
     if (users === undefined) {
       throw new HTTPException(500, { message: "Not Found" })
     }
-    console.log("C")
+
     const usersJson = users.map((user) => {
       return {
         id: user.id,
@@ -69,7 +69,7 @@ export const usersRoutes = app
         role: user.role,
       }
     })
-    console.log("D")
+
     return c.json(usersJson)
   })
   /**

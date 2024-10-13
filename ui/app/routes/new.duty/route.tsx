@@ -16,7 +16,7 @@ export default function Route() {
 
   const mutation = useMutation({
     async mutationFn() {
-      const resp = await client.api.duty.$post({
+      const resp = await client.api.tasks.$post({
         json: {
           name: name,
           overview: overview,

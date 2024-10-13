@@ -4,7 +4,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 /**
  * 授業情報
  */
-export const duty = sqliteTable("duty", {
+export const task = sqliteTable("task", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   /**

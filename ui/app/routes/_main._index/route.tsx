@@ -1,7 +1,6 @@
 import type { MetaFunction } from "@remix-run/node"
-import { Link } from "@remix-run/react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
-import { DutyCard } from "~/routes/_main._index/components/duty-card"
+import { TaskCard } from "~/routes/_main._index/components/task-card"
 
 export const meta: MetaFunction = () => {
   return [
@@ -28,21 +27,11 @@ export default function Route() {
         <ChevronRight />
       </div>
       <div className="flex flex-col gap-y-2">
-        <Link to="/roster/1">
-          <DutyCard />
-        </Link>
-        <Link to="/roster/2">
-          <DutyCard />
-        </Link>
-        <Link to="/roster/3">
-          <DutyCard />
-        </Link>
-        <Link to="/roster/4">
-          <DutyCard />
-        </Link>
-        <Link to="/roster/5">
-          <DutyCard />
-        </Link>
+        <TaskCard />
+        <TaskCard />
+        <TaskCard />
+        <TaskCard />
+        <TaskCard />
       </div>
     </main>
   )

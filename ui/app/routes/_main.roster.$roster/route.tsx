@@ -1,9 +1,7 @@
-import { type LoaderFunctionArgs, json } from "@remix-run/cloudflare"
-import { useLoaderData } from "@remix-run/react"
-import { Input } from "~/components/ui/input"
-import {} from "~/components/ui/select"
-import { loaderClient } from "~/lib/loader-client"
-import { DutyCheckbox } from "~/routes/_main.roster.$roster/components/duty-checkbox"
+import { useSuspenseQuery } from "@tanstack/react-query"
+import { client } from "~/lib/client"
+import { UserSelect } from "~/routes/_main._index/components/user-select"
+import { TaskCheckbox } from "~/routes/_main.roster.$roster/components/task-checkbox"
 
 /**
  * ページIDを日付にする
@@ -12,39 +10,35 @@ import { DutyCheckbox } from "~/routes/_main.roster.$roster/components/duty-chec
  * ボタン押したらページ開いてる人の名前が入るようにする
  * @returns
  */
-export async function loader(args: LoaderFunctionArgs) {
-  const client = loaderClient(
-    args.context.cloudflare.env.API.fetch.bind(args.context.cloudflare.env.API),
-  )
-
-  const resp = await client.api.duty.$get()
-
-  const duty = await resp.json()
-
-  return json(duty)
-}
 
 export default function Route() {
-  const data = useLoaderData<typeof loader>()
+  const data = useSuspenseQuery({
+    queryKey: ["tasks"],
+    async queryFn() {
+      const resp = await client.api.tasks.$get()
+      const tasks = await resp.json()
+      return tasks
+    },
+  })
 
   return (
     <main className="p-8 container space-y-4">
       <h1 className="font-bold">{"当番作業一覧"}</h1>
       <div>
         <p>{"午前"}</p>
-        <Input placeholder="担当者" />
+        <UserSelect />
       </div>
       <div>
         <p>{"午後"}</p>
-        <Input placeholder="担当者" />
+        <UserSelect />
       </div>
       <div className="space-y-2">
-        {data.map((duty) => (
-          <DutyCheckbox
-            key={duty.id}
-            id={duty.id}
-            name={duty.name}
-            overview={duty.overview}
+        {data.data.map((task) => (
+          <TaskCheckbox
+            key={task.id}
+            id={task.id}
+            name={task.name}
+            overview={task.overview}
           />
         ))}
       </div>

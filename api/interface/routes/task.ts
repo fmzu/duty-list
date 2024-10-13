@@ -14,9 +14,9 @@ const app = apiFactory.createApp()
  * 一般ユーザは当番作業の取得のみ行うことができる
  * 必須事項に色がついているか努力事項を分けて記載してあるとわかりやすい
  */
-export const dutyRoutes = app
+export const taskRoutes = app
   .post(
-    "/duty",
+    "/tasks",
     vValidator(
       "json",
       object({
@@ -30,10 +30,10 @@ export const dutyRoutes = app
 
       const db = drizzle(c.env.DB)
 
-      const dutyId = crypto.randomUUID()
+      const taskId = crypto.randomUUID()
 
-      await db.insert(schema.duty).values({
-        id: dutyId,
+      await db.insert(schema.task).values({
+        id: taskId,
         name: json.name,
         overview: json.overview,
       })
@@ -44,57 +44,57 @@ export const dutyRoutes = app
   /**
    * 複数の当番を取得する
    */
-  .get("/duty", async (c) => {
+  .get("/tasks", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const duty = await db.query.duty.findMany()
+    const task = await db.query.task.findMany()
 
-    const dutyJson = duty.map((duty) => {
+    const taskJson = task.map((task) => {
       return {
-        ...duty,
+        ...task,
       }
     })
 
-    return c.json(dutyJson)
+    return c.json(taskJson)
   })
   /**
    * 任意の当番を取得する
    */
-  .get("/duty/:duty", async (c) => {
+  .get("/tasks/:task", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const dutyId = c.req.param("duty")
+    const taskId = c.req.param("task")
 
-    const duty = await db.query.duty.findFirst({
-      where: eq(schema.duty.id, dutyId),
+    const task = await db.query.task.findFirst({
+      where: eq(schema.task.id, taskId),
     })
 
-    if (duty === undefined) {
+    if (task === undefined) {
       throw new HTTPException(404, { message: "Not found" })
     }
 
-    const dutyJson = { ...duty }
+    const taskJson = { ...task }
 
-    return c.json(dutyJson)
+    return c.json(taskJson)
   })
   /**
    * 任意の当番を修正する
    */
-  .put("/duty/:duty", async (c) => {
+  .put("/tasks/:task", async (c) => {
     return c.json({})
   })
   /**
    * 任意の当番を削除する
    */
-  .put("/duty/:duty", async (c) => {
+  .put("/tasks/:task", async (c) => {
     const db = drizzle(c.env.DB)
 
-    const dutyId = c.req.param("duty")
+    const taskId = c.req.param("task")
 
     await db
-      .update(schema.duty)
+      .update(schema.task)
       .set({ isDeleted: true })
-      .where(eq(schema.duty.id, dutyId))
+      .where(eq(schema.task.id, taskId))
 
     return c.json({})
   })
