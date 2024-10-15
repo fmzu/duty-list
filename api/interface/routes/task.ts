@@ -86,7 +86,7 @@ export const taskRoutes = app
   /**
    * 任意の当番を削除する
    */
-  .put("/tasks/:task", async (c) => {
+  .delete("/tasks/:task", async (c) => {
     const db = drizzle(c.env.DB)
 
     const taskId = c.req.param("task")

@@ -67,6 +67,7 @@ export const usersRoutes = app
         id: user.id,
         name: user.name,
         role: user.role,
+        email: user.email,
       }
     })
 
@@ -93,6 +94,8 @@ export const usersRoutes = app
     const userJson = {
       id: user.id,
       name: user.name,
+      role: user.role,
+      email: user.email,
     }
 
     return c.json(userJson)

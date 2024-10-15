@@ -32,13 +32,13 @@ export default function UserTable() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.data.map((task) => (
-            <TableRow key={task.id}>
+          {data.data.map((user) => (
+            <TableRow key={user.id}>
               <TableCell>
                 <UserDialog />
               </TableCell>
-              <TableCell>{task.name}</TableCell>
-              <TableCell>{"user.email"}</TableCell>
+              <TableCell>{user.name}</TableCell>
+              <TableCell>{user.email}</TableCell>
             </TableRow>
           ))}
         </TableBody>
