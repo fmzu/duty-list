@@ -3,6 +3,7 @@ import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
+import UserTable from "~/routes/new.users/components/user-table"
 
 /**
  * 管理者が新しいユーザを追作成する
@@ -87,6 +88,7 @@ export default function Route() {
           {"登録する"}
         </Button>
       </form>
+      <UserTable />
     </main>
   )
 }

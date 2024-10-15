@@ -3,6 +3,7 @@ import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
+import TaskTable from "~/routes/new.tasks/components/task-table"
 
 /**
  * 管理者が新しい当番作業表を作成する
@@ -67,6 +68,7 @@ export default function Route() {
           {"登録する"}
         </Button>
       </form>
+      <TaskTable />
     </main>
   )
 }
