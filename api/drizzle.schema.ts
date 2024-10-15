@@ -4,7 +4,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 /**
  * 授業情報
  */
-export const task = sqliteTable("task", {
+export const task = sqliteTable("tasks", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   /**
@@ -54,6 +54,26 @@ export const users = sqliteTable("users", {
 export const tags = sqliteTable("tags", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  isDeleted: integer("is_deleted", { mode: "boolean" })
+    .notNull()
+    .default(false),
+})
+
+export const roster = sqliteTable("rosters", {
+  id: text("uuid", { length: 36 }).notNull().unique(),
+  name: text("name", { length: 256 }).notNull(),
+  /**
+   * 当番担当者
+   */
+  ownerId: text("owner_id", { length: 36 }),
+  overview: text("overview", { length: 2048 }),
+  /**
+   * 当番作業を終了したかどうか
+   */
+  isDone: integer("is_done", { mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
