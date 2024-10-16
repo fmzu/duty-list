@@ -15,8 +15,8 @@ export function UserSelect() {
     queryKey: ["users"],
     async queryFn() {
       const resp = await client.api.users.$get()
-      const timetable = await resp.json()
-      return timetable
+      const user = await resp.json()
+      return user
     },
   })
 

@@ -38,7 +38,7 @@ export function LoginPage() {
 
   return (
     <div className={"mx-auto max-w-xs space-y-4 p-4 pt-40"}>
-      <h1 className="font-bold">{"TIMETABLE"}</h1>
+      <h1 className="font-bold">{"ROSTER"}</h1>
       <form
         className="space-y-2"
         onSubmit={(event) => {
