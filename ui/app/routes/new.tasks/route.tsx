@@ -68,7 +68,10 @@ export default function Route() {
           {"登録する"}
         </Button>
       </form>
-      <TaskTable />
+      <div>
+        <p>{"当番作業一覧"}</p>
+        <TaskTable />
+      </div>
     </main>
   )
 }

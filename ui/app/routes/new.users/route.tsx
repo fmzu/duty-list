@@ -88,7 +88,10 @@ export default function Route() {
           {"登録する"}
         </Button>
       </form>
-      <UserTable />
+      <div>
+        <p>{"ユーザ一覧"}</p>
+        <UserTable />
+      </div>
     </main>
   )
 }
