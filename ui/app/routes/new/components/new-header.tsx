@@ -7,7 +7,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
-import {} from "~/components/ui/popover"
 import { Separator } from "~/components/ui/separator"
 
 export default function NewHeader() {
