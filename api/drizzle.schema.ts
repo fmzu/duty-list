@@ -2,7 +2,7 @@ import { sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 /**
- * 授業情報
+ * 当番作業情報
  */
 export const task = sqliteTable("tasks", {
   id: text("uuid", { length: 36 }).notNull().unique(),
