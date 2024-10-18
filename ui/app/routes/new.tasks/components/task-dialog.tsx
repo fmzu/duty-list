@@ -100,6 +100,7 @@ export default function TaskDialog(props: Props) {
     })
 
     alert("当番作業情報を更新しました")
+    data.refetch()
 
     if (result === null) {
       return

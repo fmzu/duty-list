@@ -101,6 +101,7 @@ export default function UserDialog(props: Props) {
     })
 
     alert("ユーザ情報を更新しました")
+    data.refetch()
 
     if (result === null) {
       return
