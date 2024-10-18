@@ -91,10 +91,7 @@ export const taskRoutes = app
 
     const taskId = c.req.param("task")
 
-    await db
-      .update(schema.task)
-      .set({ isDeleted: true })
-      .where(eq(schema.task.id, taskId))
+    await db.delete(schema.task).where(eq(schema.task.id, taskId))
 
     return c.json({})
   })

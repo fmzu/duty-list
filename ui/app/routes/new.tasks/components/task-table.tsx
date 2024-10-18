@@ -35,7 +35,7 @@ export default function TaskTable() {
           {data.data.map((task) => (
             <TableRow key={task.id}>
               <TableCell>
-                <TaskDialog />
+                <TaskDialog taskId={task.id} />
               </TableCell>
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.overview}</TableCell>
