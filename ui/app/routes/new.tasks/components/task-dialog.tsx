@@ -18,6 +18,12 @@ type Props = {
 }
 
 export default function TaskDialog(props: Props) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const openModal = () => setIsOpen(true)
+
+  const closeModal = () => setIsOpen(false)
+
   const data = useSuspenseQuery({
     /**
      * キャッシュするためのキー
@@ -102,60 +108,75 @@ export default function TaskDialog(props: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild onClick={openModal}>
         <Button variant={"secondary"}>
           <EllipsisVertical className="w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{"当番作業の編集・削除"}</DialogTitle>
-        </DialogHeader>
-        <div>
-          <p>{"削除"}</p>
-          <Button className="w-full" variant={"secondary"} onClick={onDelete}>
-            {"削除"}
-          </Button>
-        </div>
-        <div className="space-y-2">
-          <p>{"編集"}</p>
-          <div className="space-y-2">
-            <p className="text-sm">{"現在の情報: "}</p>
-            <Input
-              placeholder={"現在の当番作業名"}
-              value={data.data.name}
-              readOnly
-            />
-            <Input
-              placeholder={"現在の当番作業説明"}
-              value={data.data.overview ?? ""}
-              readOnly
-            />
-          </div>
-          <div className="space-y-2">
-            <p className="text-sm">{"新しい情報: "}</p>
-            <Input
-              placeholder={"新しい当番作業名"}
-              value={name}
-              onChange={(event) => {
-                // 入力値をステートに設定
-                setName(event.target.value)
+      {isOpen && (
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{"当番作業の編集・削除"}</DialogTitle>
+          </DialogHeader>
+          <div>
+            <p>{"削除"}</p>
+            <Button
+              className="w-full"
+              variant={"secondary"}
+              onClick={() => {
+                onDelete()
+                closeModal()
               }}
-            />
-            <Input
-              placeholder={"新しい当番作業名"}
-              value={overview ?? ""}
-              onChange={(event) => {
-                // 入力値をステートに設定
-                setOverview(event.target.value)
-              }}
-            />
-            <Button className="w-full" onClick={onSubmit}>
-              {"決定"}
+            >
+              {"削除"}
             </Button>
           </div>
-        </div>
-      </DialogContent>
+          <div className="space-y-2">
+            <p>{"編集"}</p>
+            <div className="space-y-2">
+              <p className="text-sm">{"現在の情報: "}</p>
+              <Input
+                placeholder={"現在の当番作業名"}
+                value={data.data.name}
+                readOnly
+              />
+              <Input
+                placeholder={"現在の当番作業説明"}
+                value={data.data.overview ?? ""}
+                readOnly
+              />
+            </div>
+            <div className="space-y-2">
+              <p className="text-sm">{"新しい情報: "}</p>
+              <Input
+                placeholder={"新しい当番作業名"}
+                value={name}
+                onChange={(event) => {
+                  // 入力値をステートに設定
+                  setName(event.target.value)
+                }}
+              />
+              <Input
+                placeholder={"新しい当番作業名"}
+                value={overview ?? ""}
+                onChange={(event) => {
+                  // 入力値をステートに設定
+                  setOverview(event.target.value)
+                }}
+              />
+              <Button
+                className="w-full"
+                onClick={() => {
+                  onSubmit()
+                  closeModal()
+                }}
+              >
+                {"決定"}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      )}
     </Dialog>
   )
 }

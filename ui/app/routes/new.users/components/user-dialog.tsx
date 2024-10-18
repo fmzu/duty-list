@@ -19,6 +19,12 @@ type Props = {
 }
 
 export default function UserDialog(props: Props) {
+  const [isOpen, setIsOpen] = useState(false)
+
+  const openModal = () => setIsOpen(true)
+
+  const closeModal = () => setIsOpen(false)
+
   const data = useSuspenseQuery({
     /**
      * キャッシュするためのキー
@@ -103,60 +109,75 @@ export default function UserDialog(props: Props) {
 
   return (
     <Dialog>
-      <DialogTrigger>
+      <DialogTrigger asChild onClick={openModal}>
         <Button variant={"secondary"}>
           <EllipsisVertical className="w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{"ユーザの編集・削除"}</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-4">
+      {isOpen && (
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{"ユーザの編集・削除"}</DialogTitle>
+          </DialogHeader>
           <div className="space-y-4">
-            <p>{"削除"}</p>
-            <Button className="w-full" variant={"secondary"} onClick={onDelete}>
-              {"削除"}
-            </Button>
-          </div>
-          <Separator />
-          <div className="space-y-4">
-            <p>{"編集"}</p>
-            <div className="space-y-2">
-              <p className="text-sm">{"現在の情報: "}</p>
-              <Input
-                placeholder={"現在のユーザ名"}
-                value={data.data.name}
-                readOnly
-              />
-              <Input
-                placeholder={"現在のメールアドレス"}
-                value={data.data.email}
-                readOnly
-              />
-              <Separator />
-              <p className="text-sm">{"新しい情報: "}</p>
-              <Input
-                placeholder={"ユーザ名"}
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value)
+            <div className="space-y-4">
+              <p>{"削除"}</p>
+              <Button
+                className="w-full"
+                variant={"secondary"}
+                onClick={() => {
+                  onDelete()
+                  closeModal()
                 }}
-              />
-              <Input
-                placeholder={"メールアドレス"}
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value)
-                }}
-              />
-              <Button className="w-full" onClick={onSubmit}>
-                {"決定"}
+              >
+                {"削除"}
               </Button>
             </div>
+            <Separator />
+            <div className="space-y-4">
+              <p>{"編集"}</p>
+              <div className="space-y-2">
+                <p className="text-sm">{"現在の情報: "}</p>
+                <Input
+                  placeholder={"現在のユーザ名"}
+                  value={data.data.name}
+                  readOnly
+                />
+                <Input
+                  placeholder={"現在のメールアドレス"}
+                  value={data.data.email}
+                  readOnly
+                />
+                <Separator />
+                <p className="text-sm">{"新しい情報: "}</p>
+                <Input
+                  placeholder={"ユーザ名"}
+                  value={name}
+                  onChange={(e) => {
+                    setName(e.target.value)
+                  }}
+                />
+                <Input
+                  placeholder={"メールアドレス"}
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value)
+                  }}
+                />
+                <Button
+                  className="w-full"
+                  onClick={() => {
+                    onSubmit()
+                    closeModal()
+                  }}
+                >
+                  {"決定"}
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </DialogContent>
+        </DialogContent>
+      )}
     </Dialog>
   )
 }
