@@ -1,6 +1,7 @@
 import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import type { InferRequestType, InferResponseType } from "hono/client"
 import { EllipsisVertical } from "lucide-react"
+import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import {
   Dialog,
@@ -60,6 +61,46 @@ export default function UserDialog(props: Props) {
     data.refetch()
   }
 
+  const putMutation = useMutation<
+    InferResponseType<typeof endpoint.$put>,
+    Error,
+    InferRequestType<typeof endpoint.$put>
+  >({
+    async mutationFn() {
+      const resp = await endpoint.$put({
+        param: { user: props.userId },
+        json: {
+          name: name,
+          email: email,
+        },
+      })
+
+      const json = await resp.json()
+
+      return json
+    },
+  })
+
+  const [name, setName] = useState(data.data.name)
+
+  const [email, setEmail] = useState(data.data.email)
+
+  const onSubmit = async () => {
+    const result = await putMutation.mutateAsync({
+      param: { user: props.userId },
+      json: {
+        name: name,
+        email: email,
+      },
+    })
+
+    alert("ユーザ情報を更新しました")
+
+    if (result === null) {
+      return
+    }
+  }
+
   return (
     <Dialog>
       <DialogTrigger>
@@ -95,9 +136,23 @@ export default function UserDialog(props: Props) {
               />
               <Separator />
               <p className="text-sm">{"新しい情報: "}</p>
-              <Input placeholder={"ユーザ名"} />
-              <Input placeholder={"メールアドレス"} />
-              <Button className="w-full">{"決定"}</Button>
+              <Input
+                placeholder={"ユーザ名"}
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value)
+                }}
+              />
+              <Input
+                placeholder={"メールアドレス"}
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                }}
+              />
+              <Button className="w-full" onClick={onSubmit}>
+                {"決定"}
+              </Button>
             </div>
           </div>
         </div>

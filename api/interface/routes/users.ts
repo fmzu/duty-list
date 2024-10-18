@@ -104,9 +104,33 @@ export const usersRoutes = app
   /**
    * アカウントを更新する
    */
-  .put("/users/:user", async (c) => {
-    return c.json({})
-  })
+  .put(
+    "/users/:user",
+    vValidator(
+      "json",
+      object({
+        name: string(),
+        email: string(),
+      }),
+    ),
+    async (c) => {
+      const db = drizzle(c.env.DB)
+
+      const userId = c.req.param("user")
+
+      const json = c.req.valid("json")
+
+      await db
+        .update(schema.users)
+        .set({
+          name: json.name,
+          email: json.email,
+        })
+        .where(eq(schema.users.id, userId))
+
+      return c.json({})
+    },
+  )
   /**
    * アカウントを削除する
    */

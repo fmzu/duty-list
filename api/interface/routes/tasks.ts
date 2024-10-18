@@ -78,11 +78,35 @@ export const taskRoutes = app
     return c.json(taskJson)
   })
   /**
-   * 任意の当番を修正する
+   * 当番を更新する
    */
-  .put("/tasks/:task", async (c) => {
-    return c.json({})
-  })
+  .put(
+    "/tasks/:task",
+    vValidator(
+      "json",
+      object({
+        name: string(),
+        overview: nullable(string()),
+      }),
+    ),
+    async (c) => {
+      const db = drizzle(c.env.DB)
+
+      const taskId = c.req.param("task")
+
+      const json = c.req.valid("json")
+
+      await db
+        .update(schema.task)
+        .set({
+          name: json.name,
+          overview: json.overview,
+        })
+        .where(eq(schema.task.id, taskId))
+
+      return c.json({})
+    },
+  )
   /**
    * 任意の当番を削除する
    */
