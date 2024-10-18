@@ -2,21 +2,24 @@ import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
 import { client } from "~/lib/client"
 import { UserSelect } from "~/routes/_main._index/components/user-select"
 import { TaskCheckbox } from "~/routes/_main.roster.$roster/components/task-checkbox"
+import { UserSelectDialog } from "~/routes/_main.roster.$roster/components/user-select-dialog"
 
 /**
  * ページIDを日付にする
  * チェックリストの当番作業一覧を表示する
  * この中で本日の担当を登録することができる
  * ボタン押したらページ開いてる人の名前が入るようにする
+ * 選択できる担当者はこの場合自分のみ（一般ユーザのため。このページでは管理者も自分しか指定できない。）
  * @returns
  */
-
 export default function Route() {
   const data = useSuspenseQuery({
     queryKey: ["tasks"],
     async queryFn() {
       const resp = await client.api.tasks.$get()
+
       const tasks = await resp.json()
+
       return tasks
     },
   })
@@ -49,12 +52,17 @@ export default function Route() {
       </div> */}
       <div className="space-y-2">
         {data.data.map((task) => (
-          <TaskCheckbox
+          <div
             key={task.id}
-            id={task.id}
-            name={task.name}
-            overview={task.overview}
-          />
+            className="flex space-x-2 justify-between items-center"
+          >
+            <TaskCheckbox
+              id={task.id}
+              name={task.name}
+              overview={task.overview}
+            />
+            <UserSelectDialog />
+          </div>
         ))}
       </div>
     </main>

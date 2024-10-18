@@ -96,6 +96,7 @@ export const usersRoutes = app
       name: user.name,
       role: user.role,
       email: user.email,
+      isDeleted: user.isDeleted,
     }
 
     return c.json(userJson)
@@ -114,10 +115,7 @@ export const usersRoutes = app
 
     const userId = c.req.param("user")
 
-    await db
-      .update(schema.users)
-      .set({ isDeleted: true })
-      .where(eq(schema.users.id, userId))
+    await db.delete(schema.users).where(eq(schema.users.id, userId))
 
     return c.json({})
   })

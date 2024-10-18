@@ -36,7 +36,9 @@ export default function Route() {
           role: role,
         },
       })
+      
       const json = await resp.json()
+      
       return json
     },
   })

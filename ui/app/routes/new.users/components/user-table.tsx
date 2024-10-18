@@ -35,7 +35,7 @@ export default function UserTable() {
           {data.data.map((user) => (
             <TableRow key={user.id}>
               <TableCell>
-                <UserDialog />
+                <UserDialog userId={user.id} />
               </TableCell>
               <TableCell>{user.name}</TableCell>
               <TableCell>{user.email}</TableCell>
