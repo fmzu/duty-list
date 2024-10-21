@@ -47,7 +47,9 @@ export const taskRoutes = app
   .get("/tasks", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const task = await db.query.tasks.findMany()
+    const task = await db.query.tasks.findMany({
+      with: { owner: true, tag: true, roster: true },
+    })
 
     const taskJson = task.map((task) => {
       return {
@@ -67,6 +69,7 @@ export const taskRoutes = app
 
     const task = await db.query.tasks.findFirst({
       where: eq(schema.tasks.id, taskId),
+      with: { owner: true, tag: true, roster: true },
     })
 
     if (task === undefined) {
