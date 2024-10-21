@@ -23,7 +23,7 @@ export const roster = app
 
       const rosterId = crypto.randomUUID()
 
-      await db.insert(schema.task).values({
+      await db.insert(schema.tasks).values({
         id: rosterId,
         name: json.name,
         ownerId: json.ownerId,

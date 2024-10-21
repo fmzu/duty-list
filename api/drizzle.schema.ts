@@ -1,10 +1,10 @@
-import { sql } from "drizzle-orm"
+import { relations, sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 /**
  * 当番作業情報
  */
-export const task = sqliteTable("tasks", {
+export const tasks = sqliteTable("tasks", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   /**
@@ -23,12 +23,33 @@ export const task = sqliteTable("tasks", {
    * 当番説明
    */
   overview: text("overview", { length: 2048 }),
+  /**
+   * タグ
+   */
+  tagId: text("tag_id", { length: 256 }),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .notNull()
     .default(false),
+})
+
+export const taskRelations = relations(tasks, (fn) => {
+  return {
+    owner: fn.one(users, {
+      fields: [tasks.ownerId],
+      references: [users.id],
+    }),
+    tag: fn.one(tags, {
+      fields: [tasks.tagId],
+      references: [tags.id],
+    }),
+    roster: fn.one(roster, {
+      fields: [tasks.id],
+      references: [roster.taskId],
+    }),
+  }
 })
 
 export const users = sqliteTable("users", {
@@ -51,6 +72,20 @@ export const users = sqliteTable("users", {
     .default(false),
 })
 
+export const userRelations = relations(users, (fn) => {
+  return {
+    tasks: fn.many(tasks),
+    amOwner: fn.one(roster, {
+      fields: [users.id],
+      references: [roster.amOwnerId],
+    }),
+    pmOwner: fn.one(roster, {
+      fields: [users.id],
+      references: [roster.pmOwnerId],
+    }),
+  }
+})
+
 export const tags = sqliteTable("tags", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
@@ -62,14 +97,27 @@ export const tags = sqliteTable("tags", {
     .default(false),
 })
 
+export const tagRelations = relations(tags, (fn) => {
+  return {
+    tasks: fn.one(tasks),
+  }
+})
+
 export const roster = sqliteTable("rosters", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   /**
-   * 当番担当者
+   * 午前当番担当者
    */
-  ownerId: text("owner_id", { length: 36 }),
-  overview: text("overview", { length: 2048 }),
+  amOwnerId: text("am_owner_id", { length: 36 }),
+  /**
+   * 午後当番担当者
+   */
+  pmOwnerId: text("pm_owner_id", { length: 36 }),
+  /**
+   * 当番作業
+   */
+  taskId: text("task_id", { length: 36 }),
   /**
    * 当番作業を終了したかどうか
    */
@@ -80,4 +128,18 @@ export const roster = sqliteTable("rosters", {
   isDeleted: integer("is_deleted", { mode: "boolean" })
     .notNull()
     .default(false),
+})
+
+export const rosterRelations = relations(roster, (fn) => {
+  return {
+    task: fn.many(tasks),
+    amOwner: fn.one(users, {
+      fields: [roster.amOwnerId],
+      references: [users.id],
+    }),
+    pmOwner: fn.one(users, {
+      fields: [roster.pmOwnerId],
+      references: [users.id],
+    }),
+  }
 })

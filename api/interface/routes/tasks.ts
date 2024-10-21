@@ -32,7 +32,7 @@ export const taskRoutes = app
 
       const taskId = crypto.randomUUID()
 
-      await db.insert(schema.task).values({
+      await db.insert(schema.tasks).values({
         id: taskId,
         name: json.name,
         overview: json.overview,
@@ -47,7 +47,7 @@ export const taskRoutes = app
   .get("/tasks", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const task = await db.query.task.findMany()
+    const task = await db.query.tasks.findMany()
 
     const taskJson = task.map((task) => {
       return {
@@ -65,8 +65,8 @@ export const taskRoutes = app
 
     const taskId = c.req.param("task")
 
-    const task = await db.query.task.findFirst({
-      where: eq(schema.task.id, taskId),
+    const task = await db.query.tasks.findFirst({
+      where: eq(schema.tasks.id, taskId),
     })
 
     if (task === undefined) {
@@ -97,12 +97,12 @@ export const taskRoutes = app
       const json = c.req.valid("json")
 
       await db
-        .update(schema.task)
+        .update(schema.tasks)
         .set({
           name: json.name,
           overview: json.overview,
         })
-        .where(eq(schema.task.id, taskId))
+        .where(eq(schema.tasks.id, taskId))
 
       return c.json({})
     },
@@ -115,7 +115,7 @@ export const taskRoutes = app
 
     const taskId = c.req.param("task")
 
-    await db.delete(schema.task).where(eq(schema.task.id, taskId))
+    await db.delete(schema.tasks).where(eq(schema.tasks.id, taskId))
 
     return c.json({})
   })
