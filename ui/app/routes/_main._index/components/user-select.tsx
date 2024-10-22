@@ -10,11 +10,15 @@ import {
 } from "~/components/ui/select"
 import { client } from "~/lib/client"
 
+/**
+ * ユーザ画面でのみ使うコンポーネントなので、自分の名前のみ表示されるようにする。（一般ユーザは自分以外の人を選択・指定できない為）
+ * @returns
+ */
 export function UserSelect() {
   const data = useSuspenseQuery({
-    queryKey: ["users"],
+    queryKey: ["user"],
     async queryFn() {
-      const resp = await client.api.users.$get()
+      const resp = await client.api.my.user.$get()
       const user = await resp.json()
       return user
     },
@@ -28,11 +32,9 @@ export function UserSelect() {
       <SelectContent>
         <SelectGroup>
           <SelectLabel>{"担当者"}</SelectLabel>
-          {data.data.map((user) => (
-            <SelectItem key={user.id} value={user.id}>
-              {user.name}
-            </SelectItem>
-          ))}
+          <SelectItem key={data.data.id} value={data.data.id}>
+            {data.data.name}
+          </SelectItem>
         </SelectGroup>
       </SelectContent>
     </Select>
