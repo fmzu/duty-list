@@ -24,7 +24,7 @@ export function UsersSelect(props: Props) {
       return users
     },
   })
-  console.log("A", data)
+
   const handleStringToInt = (value: string) => {
     props.setOwnerId(String(value))
   }
