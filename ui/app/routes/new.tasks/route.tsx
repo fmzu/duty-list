@@ -5,6 +5,7 @@ import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
 import { TagsSelect } from "~/routes/new.tasks/components/tags-select"
 import TaskTable from "~/routes/new.tasks/components/task-table"
+import { UsersSelect } from "~/routes/new.tasks/components/users-select"
 
 /**
  * 管理者が新しい当番作業表を作成する
@@ -17,6 +18,8 @@ export default function Route() {
   const [overview, setOverview] = useState("")
 
   const [tagId, setTagId] = useState("")
+
+  const [ownerId, setOwnerId] = useState("")
 
   const mutation = useMutation({
     async mutationFn() {
@@ -67,6 +70,7 @@ export default function Route() {
             setOverview(event.target.value)
           }}
         />
+        <UsersSelect ownerId={ownerId} setOwnerId={setOwnerId} />
         <Button type={"submit"} className="w-full">
           {"登録する"}
         </Button>

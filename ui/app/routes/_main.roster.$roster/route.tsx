@@ -10,6 +10,7 @@ import { UserSelectDialog } from "~/routes/_main.roster.$roster/components/user-
  * この中で本日の担当を登録することができる
  * ボタン押したらページ開いてる人の名前が入るようにする
  * 選択できる担当者はこの場合自分のみ（一般ユーザのため。このページでは管理者も自分しか指定できない。）
+ * タグごとに作業を分けて表示する（アコーディオンで表示する）
  * @returns
  */
 export default function Route() {

@@ -15,7 +15,7 @@ type Props = {
 
 export function TagsSelect(props: Props) {
   const data = useSuspenseQuery({
-    queryKey: ["tagSelect"],
+    queryKey: ["tagsSelect"],
     async queryFn() {
       const resp = await client.api.tags.$get()
 

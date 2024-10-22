@@ -32,6 +32,7 @@ export default function TaskTable() {
             <TableHead>{"作業区分"}</TableHead>
             <TableHead>{"作業名"}</TableHead>
             <TableHead>{"作業説明"}</TableHead>
+            <TableHead>{"作業担当者"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -43,6 +44,7 @@ export default function TaskTable() {
               <TableCell>{task.tag?.name ?? ""}</TableCell>
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.overview}</TableCell>
+              <TableCell>{task.owner?.name ?? ""}</TableCell>
             </TableRow>
           ))}
         </TableBody>
