@@ -28,6 +28,10 @@ export default function NewHeader() {
             </DropdownMenuItem>
           </Link>
           <Separator />
+          <Link to="/new/tags">
+            <DropdownMenuItem className="h-12">{"タグ登録"}</DropdownMenuItem>
+          </Link>
+          <Separator />
           <Link to="/new/tasks">
             <DropdownMenuItem className="h-12">
               {"当番作業登録"}

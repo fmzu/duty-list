@@ -9,17 +9,21 @@ import {
   TableRow,
 } from "~/components/ui/table"
 import { client } from "~/lib/client"
-import TaskDialog from "~/routes/new.tasks/components/task-dialog"
+import TagDialog from "~/routes/new.tags/components/tag-dialog"
 
-export default function TaskTable() {
+/**
+ * 連携するタスクを取得する
+ * @returns
+ */
+export default function TagTable() {
   const data = useSuspenseQuery({
-    queryKey: ["taskTable"],
+    queryKey: ["tagTable"],
     async queryFn() {
-      const resp = await client.api.tasks.$get()
+      const resp = await client.api.tags.$get()
 
-      const tasks = await resp.json()
+      const tags = await resp.json()
 
-      return tasks
+      return tags
     },
   })
 
@@ -29,18 +33,18 @@ export default function TaskTable() {
         <TableHeader>
           <TableRow>
             <TableHead>{""}</TableHead>
-            <TableHead>{"作業名"}</TableHead>
-            <TableHead>{"作業説明"}</TableHead>
+            <TableHead>{"名前"}</TableHead>
+            <TableHead>{"作業一覧"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.data.map((task) => (
-            <TableRow key={task.id}>
+          {data.data.map((tag) => (
+            <TableRow key={tag.id}>
               <TableCell>
-                <TaskDialog taskId={task.id} />
+                <TagDialog tagId={tag.id} />
               </TableCell>
-              <TableCell>{task.name}</TableCell>
-              <TableCell>{task.overview}</TableCell>
+              <TableCell>{tag.name}</TableCell>
+              <TableCell>{tag.name}</TableCell>
             </TableRow>
           ))}
         </TableBody>

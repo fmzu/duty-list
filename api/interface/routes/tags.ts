@@ -56,6 +56,7 @@ export const tagsRoutes = app
   })
   /**
    * 任意のタグを取得する
+   * 連携するtaskも連携する
    */
   .get("/tags/:tag", async (c) => {
     const db = drizzle(c.env.DB, { schema })
