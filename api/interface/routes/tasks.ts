@@ -23,6 +23,7 @@ export const taskRoutes = app
         name: string(),
         // ownerId: nullable(string()),
         overview: nullable(string()),
+        // tagId: nullable(string()),
       }),
     ),
     async (c) => {
@@ -36,6 +37,7 @@ export const taskRoutes = app
         id: taskId,
         name: json.name,
         overview: json.overview,
+        // tagId: json.tagId,
       })
 
       return c.json({})
@@ -47,17 +49,17 @@ export const taskRoutes = app
   .get("/tasks", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const task = await db.query.tasks.findMany({
+    const tasks = await db.query.tasks.findMany({
       with: { owner: true, tag: true, roster: true },
     })
 
-    const taskJson = task.map((task) => {
+    const tasksJson = tasks.map((task) => {
       return {
         ...task,
       }
     })
 
-    return c.json(taskJson)
+    return c.json(tasksJson)
   })
   /**
    * 任意の当番を取得する
@@ -90,6 +92,7 @@ export const taskRoutes = app
       object({
         name: string(),
         overview: nullable(string()),
+        // tagId: nullable(string()),
       }),
     ),
     async (c) => {
@@ -104,6 +107,7 @@ export const taskRoutes = app
         .set({
           name: json.name,
           overview: json.overview,
+          // tagId: json.tagId,
         })
         .where(eq(schema.tasks.id, taskId))
 
