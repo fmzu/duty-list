@@ -29,6 +29,7 @@ export default function TaskTable() {
         <TableHeader>
           <TableRow>
             <TableHead>{""}</TableHead>
+            <TableHead>{"作業区分"}</TableHead>
             <TableHead>{"作業名"}</TableHead>
             <TableHead>{"作業説明"}</TableHead>
           </TableRow>
@@ -39,6 +40,7 @@ export default function TaskTable() {
               <TableCell>
                 <TaskDialog taskId={task.id} />
               </TableCell>
+              <TableCell>{task.tag?.name ?? ""}</TableCell>
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.overview}</TableCell>
             </TableRow>

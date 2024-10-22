@@ -3,6 +3,7 @@ import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
+import { TagsSelect } from "~/routes/new.tasks/components/tags-select"
 import TaskTable from "~/routes/new.tasks/components/task-table"
 
 /**
@@ -15,14 +16,15 @@ export default function Route() {
 
   const [overview, setOverview] = useState("")
 
+  const [tagId, setTagId] = useState("")
+
   const mutation = useMutation({
     async mutationFn() {
       const resp = await client.api.tasks.$post({
         json: {
           name: name,
           overview: overview,
-          // name: name,
-          // role: role,
+          tagId: tagId,
         },
       })
       const json = await resp.json()
@@ -48,6 +50,7 @@ export default function Route() {
           onSubmit()
         }}
       >
+        <TagsSelect tagId={tagId} setTagId={setTagId} />
         <Input
           type={"text"}
           placeholder="名前"

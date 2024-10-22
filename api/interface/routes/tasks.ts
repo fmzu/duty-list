@@ -23,7 +23,7 @@ export const taskRoutes = app
         name: string(),
         // ownerId: nullable(string()),
         overview: nullable(string()),
-        // tagId: nullable(string()),
+        tagId: nullable(string()),
       }),
     ),
     async (c) => {
@@ -37,7 +37,7 @@ export const taskRoutes = app
         id: taskId,
         name: json.name,
         overview: json.overview,
-        // tagId: json.tagId,
+        tagId: json.tagId,
       })
 
       return c.json({})
