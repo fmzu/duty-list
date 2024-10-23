@@ -21,9 +21,9 @@ export const taskRoutes = app
       "json",
       object({
         name: string(),
-        // ownerId: nullable(string()),
         overview: nullable(string()),
         tagId: nullable(string()),
+        ownerId: nullable(string()),
       }),
     ),
     async (c) => {
@@ -38,6 +38,7 @@ export const taskRoutes = app
         name: json.name,
         overview: json.overview,
         tagId: json.tagId,
+        ownerId: json.ownerId,
       })
 
       return c.json({})
@@ -92,7 +93,8 @@ export const taskRoutes = app
       object({
         name: string(),
         overview: nullable(string()),
-        // tagId: nullable(string()),
+        tagId: nullable(string()),
+        ownerId: nullable(string()),
       }),
     ),
     async (c) => {
@@ -107,7 +109,8 @@ export const taskRoutes = app
         .set({
           name: json.name,
           overview: json.overview,
-          // tagId: json.tagId,
+          tagId: json.tagId,
+          ownerId: json.ownerId,
         })
         .where(eq(schema.tasks.id, taskId))
 

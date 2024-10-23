@@ -12,6 +12,8 @@ import {
 } from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
+import { TagsSelect } from "~/routes/new.tasks/components/tags-select"
+import { UsersSelect } from "~/routes/new.tasks/components/users-select"
 
 type Props = {
   taskId: string
@@ -66,6 +68,14 @@ export default function TaskDialog(props: Props) {
     data.refetch()
   }
 
+  const [name, setName] = useState(data.data.name)
+
+  const [overview, setOverview] = useState(data.data.overview)
+
+  const [tagId, setTagId] = useState(data.data.tag?.id ?? null)
+
+  const [ownerId, setOwnerId] = useState(data.data.owner?.id ?? null)
+
   const putMutation = useMutation<
     InferResponseType<typeof endpoint.$put>,
     Error,
@@ -77,6 +87,8 @@ export default function TaskDialog(props: Props) {
         json: {
           name: name,
           overview: overview,
+          tagId: tagId,
+          ownerId: ownerId,
         },
       })
 
@@ -86,16 +98,14 @@ export default function TaskDialog(props: Props) {
     },
   })
 
-  const [name, setName] = useState(data.data.name)
-
-  const [overview, setOverview] = useState(data.data.overview)
-
   const onSubmit = async () => {
     const result = await putMutation.mutateAsync({
       param: { task: props.taskId },
       json: {
         name: name,
         overview: overview,
+        tagId: tagId,
+        ownerId: ownerId,
       },
     })
 
@@ -137,6 +147,11 @@ export default function TaskDialog(props: Props) {
             <div className="space-y-2">
               <p className="text-sm">{"現在の情報: "}</p>
               <Input
+                placeholder={"現在の当番作業区分"}
+                value={data.data.tag?.name ?? ""}
+                readOnly
+              />
+              <Input
                 placeholder={"現在の当番作業名"}
                 value={data.data.name}
                 readOnly
@@ -146,9 +161,15 @@ export default function TaskDialog(props: Props) {
                 value={data.data.overview ?? ""}
                 readOnly
               />
+              <Input
+                placeholder={"現在の当番作業担当者"}
+                value={data.data.owner?.name ?? ""}
+                readOnly
+              />
             </div>
             <div className="space-y-2">
               <p className="text-sm">{"新しい情報: "}</p>
+              <TagsSelect tagId={tagId ?? ""} setTagId={setTagId} />
               <Input
                 placeholder={"新しい当番作業名"}
                 value={name}
@@ -158,13 +179,14 @@ export default function TaskDialog(props: Props) {
                 }}
               />
               <Input
-                placeholder={"新しい当番作業名"}
+                placeholder={"新しい当番作業説明"}
                 value={overview ?? ""}
                 onChange={(event) => {
                   // 入力値をステートに設定
                   setOverview(event.target.value)
                 }}
               />
+              <UsersSelect ownerId={ownerId ?? ""} setOwnerId={setOwnerId} />
               <Button
                 className="w-full"
                 onClick={() => {

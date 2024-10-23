@@ -28,6 +28,7 @@ export default function Route() {
           name: name,
           overview: overview,
           tagId: tagId,
+          ownerId: ownerId,
         },
       })
       const json = await resp.json()
