@@ -6,7 +6,7 @@ import { apiFactory } from "../api-factory"
 
 const app = apiFactory.createApp()
 
-export const roster = app
+export const rosters = app
   .post(
     "/rosters",
     vValidator(

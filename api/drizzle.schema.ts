@@ -45,9 +45,9 @@ export const taskRelations = relations(tasks, (fn) => {
       fields: [tasks.tagId],
       references: [tags.id],
     }),
-    roster: fn.one(roster, {
+    roster: fn.one(rosters, {
       fields: [tasks.id],
-      references: [roster.taskId],
+      references: [rosters.taskId],
     }),
   }
 })
@@ -75,13 +75,13 @@ export const users = sqliteTable("users", {
 export const userRelations = relations(users, (fn) => {
   return {
     tasks: fn.many(tasks),
-    amOwner: fn.one(roster, {
+    amOwner: fn.one(rosters, {
       fields: [users.id],
-      references: [roster.amOwnerId],
+      references: [rosters.amOwnerId],
     }),
-    pmOwner: fn.one(roster, {
+    pmOwner: fn.one(rosters, {
       fields: [users.id],
-      references: [roster.pmOwnerId],
+      references: [rosters.pmOwnerId],
     }),
   }
 })
@@ -103,7 +103,7 @@ export const tagRelations = relations(tags, (fn) => {
   }
 })
 
-export const roster = sqliteTable("rosters", {
+export const rosters = sqliteTable("rosters", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   /**
@@ -130,15 +130,15 @@ export const roster = sqliteTable("rosters", {
     .default(false),
 })
 
-export const rosterRelations = relations(roster, (fn) => {
+export const rosterRelations = relations(rosters, (fn) => {
   return {
     task: fn.many(tasks),
     amOwner: fn.one(users, {
-      fields: [roster.amOwnerId],
+      fields: [rosters.amOwnerId],
       references: [users.id],
     }),
     pmOwner: fn.one(users, {
-      fields: [roster.pmOwnerId],
+      fields: [rosters.pmOwnerId],
       references: [users.id],
     }),
   }
