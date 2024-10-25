@@ -63,6 +63,7 @@ export default function UserDialog(props: Props) {
       param: { user: props.userId },
     })
     alert("ユーザを削除しました")
+    window.location.reload()
 
     data.refetch()
   }
@@ -101,6 +102,7 @@ export default function UserDialog(props: Props) {
     })
 
     alert("ユーザ情報を更新しました")
+    window.location.reload()
     data.refetch()
 
     if (result === null) {

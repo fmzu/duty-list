@@ -31,6 +31,7 @@ export default function Route() {
     const result = mutation.mutate()
 
     alert("タグを追加しました")
+    window.location.reload()
 
     if (result === null) {
       return

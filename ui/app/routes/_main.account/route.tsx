@@ -38,6 +38,7 @@ export default function Route() {
       },
     })
     alert("パスワードを変更しました")
+    window.location.reload()
 
     if (result === null) {
       navigate("/")

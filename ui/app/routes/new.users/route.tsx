@@ -36,9 +36,9 @@ export default function Route() {
           role: role,
         },
       })
-      
+
       const json = await resp.json()
-      
+
       return json
     },
   })
@@ -46,6 +46,7 @@ export default function Route() {
   const onSubmit = () => {
     const result = mutation.mutate()
     alert("アカウントを作成しました")
+    window.location.reload()
     if (result === null) {
       return
     }

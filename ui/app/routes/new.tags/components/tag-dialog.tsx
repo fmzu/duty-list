@@ -62,6 +62,7 @@ export default function TagDialog(props: Props) {
       param: { tag: props.tagId },
     })
     alert("ユーザを削除しました")
+    window.location.reload()
 
     data.refetch()
   }
@@ -96,6 +97,7 @@ export default function TagDialog(props: Props) {
     })
 
     alert("当番作業情報を更新しました")
+    window.location.reload()
     data.refetch()
 
     if (result === null) {

@@ -64,6 +64,7 @@ export default function TaskDialog(props: Props) {
       param: { task: props.taskId },
     })
     alert("ユーザを削除しました")
+    window.location.reload()
 
     data.refetch()
   }
@@ -110,6 +111,7 @@ export default function TaskDialog(props: Props) {
     })
 
     alert("当番作業情報を更新しました")
+    window.location.reload()
     data.refetch()
 
     if (result === null) {
