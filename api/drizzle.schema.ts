@@ -3,6 +3,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 /**
  * 当番作業
+ * 作業項目とユーザ、日付を関連付けたもの
  */
 export const tasks = sqliteTable("tasks", {
   id: text("uuid", { length: 36 }).notNull().unique(),

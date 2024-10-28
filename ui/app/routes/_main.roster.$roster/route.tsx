@@ -1,4 +1,4 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import { client } from "~/lib/client"
 import { UserSelect } from "~/routes/_main._index/components/user-select"
 import { TaskCheckbox } from "~/routes/_main.roster.$roster/components/task-checkbox"
@@ -25,21 +25,6 @@ export default function Route() {
     },
   })
 
-  const mutation = useMutation({
-    async mutationFn() {
-      const resp = await client.api.rosters.$post({
-        json: {
-          name: "",
-          ownerId: "",
-        },
-      })
-
-      const json = await resp.json()
-
-      return json
-    },
-  })
-
   return (
     <main className="p-8 container space-y-4">
       <h1 className="font-bold">{"10月16日当番作業一覧"}</h1>
@@ -57,11 +42,7 @@ export default function Route() {
             key={task.id}
             className="flex space-x-2 justify-between items-center"
           >
-            <TaskCheckbox
-              id={task.id}
-              name={task.name}
-              overview={task.overview}
-            />
+            <TaskCheckbox id={task.id} name={task.name} overview={task.name} />
             <UserSelectDialog />
           </div>
         ))}

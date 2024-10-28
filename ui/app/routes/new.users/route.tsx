@@ -2,13 +2,7 @@ import { useMutation } from "@tanstack/react-query"
 import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select"
+import {} from "~/components/ui/select"
 import { client } from "~/lib/client"
 import UserTable from "~/routes/new.users/components/user-table"
 
@@ -22,7 +16,7 @@ export default function Route() {
 
   const [password, setPassword] = useState("")
 
-  const [role, setRole] = useState(0)
+  // const [role, setRole] = useState(0)
 
   const [name, setName] = useState("")
 
@@ -33,7 +27,7 @@ export default function Route() {
           email: loginId,
           password: password,
           name: name,
-          role: role,
+          // role: role,
         },
       })
 
@@ -94,7 +88,7 @@ export default function Route() {
             setRole(event.target.valueAsNumber)
           }}
         /> */}
-        <Select>
+        {/* <Select>
           <SelectTrigger>
             <SelectValue placeholder="役割" />
           </SelectTrigger>
@@ -102,7 +96,7 @@ export default function Route() {
             <SelectItem value="0">{"管理者"}</SelectItem>
             <SelectItem value="1">{"ユーザ"}</SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
 
         <Button type={"submit"} className="w-full">
           {"登録する"}
