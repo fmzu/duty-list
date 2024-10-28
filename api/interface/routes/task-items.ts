@@ -2,7 +2,7 @@ import { vValidator } from "@hono/valibot-validator"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { HTTPException } from "hono/http-exception"
-import { object, string } from "valibot"
+import { nullable, object, string } from "valibot"
 import { apiFactory } from "~/interface/api-factory"
 import { schema } from "~/lib/schema"
 
@@ -21,6 +21,7 @@ export const taskItemsRoutes = app
       object({
         name: string(),
         overview: string(),
+        tagId: nullable(string()),
       }),
     ),
     async (c) => {
@@ -34,18 +35,23 @@ export const taskItemsRoutes = app
         id: itemId,
         name: json.name,
         overview: json.overview,
+        tagId: json.tagId,
       })
 
       return c.json({})
     },
   )
   /**
-   * たくさんの作業項目を取得する
+   * 複数の作業項目を取得する
    */
   .get("/task-items", async (c) => {
     const db = drizzle(c.env.DB, { schema })
 
-    const taskItems = await db.query.taskItems.findMany()
+    const itemId = c.req.param("taskItem")
+
+    const taskItems = await db.query.taskItems.findMany({
+      with: { tag: true },
+    })
 
     const taskItemsJson = taskItems.map((taskItem) => {
       return {
@@ -65,6 +71,7 @@ export const taskItemsRoutes = app
 
     const taskItem = await db.query.taskItems.findFirst({
       where: eq(schema.taskItems.id, itemId),
+      with: { tag: true },
     })
 
     if (taskItem === undefined) {
@@ -85,6 +92,7 @@ export const taskItemsRoutes = app
       object({
         name: string(),
         overview: string(),
+        tagId: nullable(string()),
       }),
     ),
     async (c) => {
@@ -99,6 +107,7 @@ export const taskItemsRoutes = app
         .set({
           name: json.name,
           overview: json.overview,
+          tagId: json.tagId,
         })
         .where(eq(schema.taskItems.id, itemId))
 

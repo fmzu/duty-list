@@ -43,7 +43,7 @@ export const tagsRoutes = app
     const db = drizzle(c.env.DB, { schema })
 
     const tags = await db.query.tags.findMany({
-      with: { tasks: true },
+      with: { taskItems: true },
     })
 
     const tagsJson = tags.map((tag) => {
@@ -65,7 +65,7 @@ export const tagsRoutes = app
 
     const tag = await db.query.tags.findFirst({
       where: eq(schema.tags.id, tagId),
-      with: { tasks: true },
+      with: { taskItems: true },
     })
 
     if (tag === undefined) {
