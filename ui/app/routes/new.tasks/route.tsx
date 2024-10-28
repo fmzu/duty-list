@@ -3,8 +3,8 @@ import { useState } from "react"
 import { Button } from "~/components/ui/button"
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
+import { TagsSelect } from "~/routes/new.tasks/components/tags-select"
 import TaskTable from "~/routes/new.tasks/components/task-table"
-import { UsersSelect } from "~/routes/new.tasks/components/users-select"
 
 /**
  * 管理者が新しい当番作業表を作成する
@@ -16,17 +16,17 @@ export default function Route() {
 
   const [overview, setOverview] = useState("")
 
-  const [taskItemId, setTaskItemId] = useState("")
-
   const [ownerId, setOwnerId] = useState("")
+
+  const [tagId, setTagId] = useState("")
 
   const mutation = useMutation({
     async mutationFn() {
-      const resp = await client.api.tasks.$post({
+      const resp = await client.api["task-items"].$post({
         json: {
           name: name,
-          ownerId: ownerId,
-          taskItemId: taskItemId,
+          overview: overview,
+          tagId: tagId,
         },
       })
       const json = await resp.json()
@@ -52,7 +52,7 @@ export default function Route() {
           onSubmit()
         }}
       >
-        {/* <TagsSelect tagId={taskItemId} setTagId={setTaskItemId} /> */}
+        <TagsSelect tagId={tagId} setTagId={setTagId} />
         <Input
           type={"text"}
           placeholder="名前"
@@ -61,15 +61,14 @@ export default function Route() {
             setName(event.target.value)
           }}
         />
-        {/* <Input
+        <Input
           type={"text"}
           placeholder="作業説明"
           value={overview}
           onChange={(event) => {
             setOverview(event.target.value)
           }}
-        /> */}
-        <UsersSelect ownerId={ownerId} setOwnerId={setOwnerId} />
+        />
         <Button type={"submit"} className="w-full">
           {"登録する"}
         </Button>

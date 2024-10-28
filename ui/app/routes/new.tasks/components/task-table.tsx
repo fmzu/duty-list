@@ -13,13 +13,13 @@ import TaskDialog from "~/routes/new.tasks/components/task-dialog"
 
 export default function TaskTable() {
   const data = useSuspenseQuery({
-    queryKey: ["taskTable"],
+    queryKey: ["taskItemsTable"],
     async queryFn() {
-      const resp = await client.api.tasks.$get()
+      const resp = await client.api["task-items"].$get()
 
-      const tasks = await resp.json()
+      const items = await resp.json()
 
-      return tasks
+      return items
     },
   })
 
@@ -32,19 +32,17 @@ export default function TaskTable() {
             <TableHead>{"作業区分"}</TableHead>
             <TableHead>{"作業名"}</TableHead>
             <TableHead>{"作業説明"}</TableHead>
-            <TableHead>{"作業担当者"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.data.map((task) => (
             <TableRow key={task.id}>
               <TableCell>
-                <TaskDialog taskId={task.id} />
+                <TaskDialog itemId={task.id} />
               </TableCell>
-              <TableCell>{task.tag?.name ?? ""}</TableCell>
+              <TableCell>{task.tag?.name}</TableCell>
               <TableCell>{task.name}</TableCell>
               <TableCell>{task.overview}</TableCell>
-              <TableCell>{task.owner?.name ?? ""}</TableCell>
             </TableRow>
           ))}
         </TableBody>

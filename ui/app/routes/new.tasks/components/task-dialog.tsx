@@ -13,10 +13,9 @@ import {
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
 import { TagsSelect } from "~/routes/new.tasks/components/tags-select"
-import { UsersSelect } from "~/routes/new.tasks/components/users-select"
 
 type Props = {
-  taskId: string
+  itemId: string
 }
 
 export default function TaskDialog(props: Props) {
@@ -31,19 +30,19 @@ export default function TaskDialog(props: Props) {
      * キャッシュするためのキー
      * ページごとに変える
      */
-    queryKey: ["taskdialog", props.taskId],
+    queryKey: ["taskdialog", props.itemId],
     async queryFn() {
-      const resp = await client.api.tasks[":task"].$get({
-        param: { task: props.taskId },
+      const resp = await client.api["task-items"][":taskItem"].$get({
+        param: { taskItem: props.itemId },
       })
 
-      const task = await resp.json()
+      const item = await resp.json()
 
-      return task
+      return item
     },
   })
 
-  const endpoint = client.api.tasks[":task"]
+  const endpoint = client.api["task-items"][":taskItem"]
 
   const deleteMutation = useMutation<
     InferResponseType<typeof endpoint.$delete>,
@@ -61,7 +60,7 @@ export default function TaskDialog(props: Props) {
 
   const onDelete = async () => {
     await deleteMutation.mutateAsync({
-      param: { task: props.taskId },
+      param: { taskItem: props.itemId },
     })
     alert("ユーザを削除しました")
     window.location.reload()
@@ -75,8 +74,6 @@ export default function TaskDialog(props: Props) {
 
   const [tagId, setTagId] = useState(data.data.tag?.id ?? null)
 
-  const [ownerId, setOwnerId] = useState(data.data.owner?.id ?? null)
-
   const putMutation = useMutation<
     InferResponseType<typeof endpoint.$put>,
     Error,
@@ -84,12 +81,11 @@ export default function TaskDialog(props: Props) {
   >({
     async mutationFn() {
       const resp = await endpoint.$put({
-        param: { task: props.taskId },
+        param: { taskItem: props.itemId },
         json: {
           name: name,
           overview: overview,
           tagId: tagId,
-          ownerId: ownerId,
         },
       })
 
@@ -101,12 +97,11 @@ export default function TaskDialog(props: Props) {
 
   const onSubmit = async () => {
     const result = await putMutation.mutateAsync({
-      param: { task: props.taskId },
+      param: { taskItem: props.itemId },
       json: {
         name: name,
         overview: overview,
         tagId: tagId,
-        ownerId: ownerId,
       },
     })
 
@@ -163,11 +158,6 @@ export default function TaskDialog(props: Props) {
                 value={data.data.overview ?? ""}
                 readOnly
               />
-              <Input
-                placeholder={"現在の当番作業担当者"}
-                value={data.data.owner?.name ?? ""}
-                readOnly
-              />
             </div>
             <div className="space-y-2">
               <p className="text-sm">{"新しい情報: "}</p>
@@ -188,7 +178,7 @@ export default function TaskDialog(props: Props) {
                   setOverview(event.target.value)
                 }}
               />
-              <UsersSelect ownerId={ownerId ?? ""} setOwnerId={setOwnerId} />
+              {/* <UsersSelect ownerId={ownerId ?? ""} setOwnerId={setOwnerId} /> */}
               <Button
                 className="w-full"
                 onClick={() => {
