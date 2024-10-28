@@ -3,7 +3,7 @@ import { genSaltSync, hashSync } from "bcrypt-ts"
 import { eq } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/d1"
 import { HTTPException } from "hono/http-exception"
-import { number, object, string } from "valibot"
+import { object, string } from "valibot"
 import { apiFactory } from "~/interface/api-factory"
 import { schema } from "~/lib/schema"
 
@@ -22,7 +22,6 @@ export const usersRoutes = app
         email: string(),
         password: string(),
         name: string(),
-        role: number(),
       }),
     ),
     async (c) => {
@@ -44,7 +43,6 @@ export const usersRoutes = app
         hashedPassword: hashedPassword,
         login: crypto.randomUUID(),
         name: json.name,
-        role: json.role,
       })
 
       return c.json({}, {})
@@ -66,7 +64,6 @@ export const usersRoutes = app
       return {
         id: user.id,
         name: user.name,
-        role: user.role,
         email: user.email,
       }
     })
@@ -94,7 +91,6 @@ export const usersRoutes = app
     const userJson = {
       id: user.id,
       name: user.name,
-      role: user.role,
       email: user.email,
       isDeleted: user.isDeleted,
     }

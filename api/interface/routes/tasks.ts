@@ -14,16 +14,15 @@ const app = apiFactory.createApp()
  * 一般ユーザは当番作業の取得のみ行うことができる
  * 必須事項に色がついているか努力事項を分けて記載してあるとわかりやすい
  */
-export const taskRoutes = app
+export const tasksRoutes = app
   .post(
     "/tasks",
     vValidator(
       "json",
       object({
         name: string(),
-        overview: nullable(string()),
-        tagId: nullable(string()),
         ownerId: nullable(string()),
+        taskItemId: string(),
       }),
     ),
     async (c) => {
@@ -36,9 +35,8 @@ export const taskRoutes = app
       await db.insert(schema.tasks).values({
         id: taskId,
         name: json.name,
-        overview: json.overview,
-        tagId: json.tagId,
         ownerId: json.ownerId,
+        taskItemId: json.taskItemId,
       })
 
       return c.json({})
@@ -51,7 +49,7 @@ export const taskRoutes = app
     const db = drizzle(c.env.DB, { schema })
 
     const tasks = await db.query.tasks.findMany({
-      with: { owner: true, tag: true, roster: true },
+      with: { owner: true, taskItem: true },
     })
 
     const tasksJson = tasks.map((task) => {
@@ -72,7 +70,7 @@ export const taskRoutes = app
 
     const task = await db.query.tasks.findFirst({
       where: eq(schema.tasks.id, taskId),
-      with: { owner: true, tag: true, roster: true },
+      with: { owner: true, taskItem: true },
     })
 
     if (task === undefined) {
@@ -92,9 +90,8 @@ export const taskRoutes = app
       "json",
       object({
         name: string(),
-        overview: nullable(string()),
-        tagId: nullable(string()),
         ownerId: nullable(string()),
+        taskItemId: string(),
       }),
     ),
     async (c) => {
@@ -108,9 +105,8 @@ export const taskRoutes = app
         .update(schema.tasks)
         .set({
           name: json.name,
-          overview: json.overview,
-          tagId: json.tagId,
           ownerId: json.ownerId,
+          taskItemId: json.taskItemId,
         })
         .where(eq(schema.tasks.id, taskId))
 

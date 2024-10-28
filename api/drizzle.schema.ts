@@ -2,27 +2,23 @@ import { relations, sql } from "drizzle-orm"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 /**
- * 当番作業情報
+ * 当番作業
  */
 export const tasks = sqliteTable("tasks", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   /**
-   * 時間枠（午前とか午後とか）
+   * 作業項目
    */
-  timeSlot: integer("time_slot"),
+  taskItemId: text("task_items", { length: 256 }).notNull(),
   /**
-   * 時間枠（曜日が決まっているものがあれば）
-   */
-  weekSlot: integer("week_slot"),
-  /**
-   * 当番担当者
+   * ユーザ
    */
   ownerId: text("owner_id", { length: 36 }),
   /**
-   * 当番説明
+   * 作業日時
    */
-  overview: text("overview", { length: 2048 }),
+  taskDate: integer("task_date", { mode: "timestamp" }),
   /**
    * タグ
    */
@@ -37,33 +33,30 @@ export const tasks = sqliteTable("tasks", {
 
 export const taskRelations = relations(tasks, (fn) => {
   return {
+    // タスクが持つ1人のオーナー
     owner: fn.one(users, {
       fields: [tasks.ownerId],
       references: [users.id],
     }),
+    // タスクが持つ複数の作業項目
+    taskItem: fn.many(taskItems),
+    // タスクが持つ1つのタグ
     tag: fn.one(tags, {
       fields: [tasks.tagId],
       references: [tags.id],
     }),
-    roster: fn.one(rosters, {
-      fields: [tasks.id],
-      references: [rosters.taskId],
-    }),
   }
 })
 
+/**
+ * ユーザ
+ */
 export const users = sqliteTable("users", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
   email: text("email", { length: 256 }).notNull().unique(),
   hashedPassword: text("hashed_password", { length: 256 }).notNull(),
   login: text("login", { length: 256 }).notNull().unique(),
-  /**
-   * ユーザの役職
-   * 0: 管理者
-   * 1: 一般ユーザ
-   */
-  role: integer("role").notNull(),
   createdAt: integer("created_at", { mode: "timestamp" })
     .notNull()
     .default(sql`CURRENT_TIMESTAMP`),
@@ -74,18 +67,39 @@ export const users = sqliteTable("users", {
 
 export const userRelations = relations(users, (fn) => {
   return {
+    // ユーザが持つ複数のタスク
     tasks: fn.many(tasks),
-    amOwner: fn.one(rosters, {
-      fields: [users.id],
-      references: [rosters.amOwnerId],
-    }),
-    pmOwner: fn.one(rosters, {
-      fields: [users.id],
-      references: [rosters.pmOwnerId],
+  }
+})
+
+/**
+ * 作業項目
+ */
+export const taskItems = sqliteTable("task_items", {
+  id: text("uuid", { length: 36 }).notNull().unique(),
+  name: text("name", { length: 256 }).notNull(),
+  overview: text("overviews", { length: 256 }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP`),
+  isDeleted: integer("is_deleted", { mode: "boolean" })
+    .notNull()
+    .default(false),
+})
+
+export const taskItemsRelations = relations(taskItems, (fn) => {
+  return {
+    // 作業項目が持つ複数のタスク
+    tasks: fn.one(tasks, {
+      fields: [taskItems.id],
+      references: [tasks.taskItemId],
     }),
   }
 })
 
+/**
+ * 作業項目のタグ
+ */
 export const tags = sqliteTable("tags", {
   id: text("uuid", { length: 36 }).notNull().unique(),
   name: text("name", { length: 256 }).notNull(),
@@ -99,47 +113,7 @@ export const tags = sqliteTable("tags", {
 
 export const tagRelations = relations(tags, (fn) => {
   return {
-    tasks: fn.one(tasks),
-  }
-})
-
-export const rosters = sqliteTable("rosters", {
-  id: text("uuid", { length: 36 }).notNull().unique(),
-  name: text("name", { length: 256 }).notNull(),
-  /**
-   * 午前当番担当者
-   */
-  amOwnerId: text("am_owner_id", { length: 36 }),
-  /**
-   * 午後当番担当者
-   */
-  pmOwnerId: text("pm_owner_id", { length: 36 }),
-  /**
-   * 当番作業
-   */
-  taskId: text("task_id", { length: 36 }),
-  /**
-   * 当番作業を終了したかどうか
-   */
-  isDone: integer("is_done", { mode: "boolean" }).notNull().default(false),
-  createdAt: integer("created_at", { mode: "timestamp" })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP`),
-  isDeleted: integer("is_deleted", { mode: "boolean" })
-    .notNull()
-    .default(false),
-})
-
-export const rosterRelations = relations(rosters, (fn) => {
-  return {
-    task: fn.many(tasks),
-    amOwner: fn.one(users, {
-      fields: [rosters.amOwnerId],
-      references: [users.id],
-    }),
-    pmOwner: fn.one(users, {
-      fields: [rosters.pmOwnerId],
-      references: [users.id],
-    }),
+    // タグが持つ複数のタスク
+    tasks: fn.many(tasks),
   }
 })
