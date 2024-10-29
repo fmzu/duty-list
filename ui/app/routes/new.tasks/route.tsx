@@ -14,7 +14,7 @@ export default function Route() {
   const [taskItemId, setTaskItemId] = useState("")
 
   const data = useSuspenseQuery({
-    queryKey: ["tasks"],
+    queryKey: ["taskitems"],
     async queryFn() {
       const resp = await client.api["task-items"].$get()
 
