@@ -12,12 +12,13 @@ import {
 } from "~/components/ui/dialog"
 import { Input } from "~/components/ui/input"
 import { client } from "~/lib/client"
+import { TagsSelect } from "~/routes/new.task.items/components/tags-select"
 
 type Props = {
-  tagId: string
+  itemId: string
 }
 
-export default function TaskDialog(props: Props) {
+export default function TaskItemDialog(props: Props) {
   const [isOpen, setIsOpen] = useState(false)
 
   const openModal = () => setIsOpen(true)
@@ -29,19 +30,19 @@ export default function TaskDialog(props: Props) {
      * キャッシュするためのキー
      * ページごとに変える
      */
-    queryKey: ["TaskDialog", props.tagId],
+    queryKey: ["TaskItemDialog", props.itemId],
     async queryFn() {
-      const resp = await client.api.tags[":tag"].$get({
-        param: { tag: props.tagId },
+      const resp = await client.api["task-items"][":taskItem"].$get({
+        param: { taskItem: props.itemId },
       })
 
-      const tag = await resp.json()
+      const item = await resp.json()
 
-      return tag
+      return item
     },
   })
 
-  const endpoint = client.api.tags[":tag"]
+  const endpoint = client.api["task-items"][":taskItem"]
 
   const deleteMutation = useMutation<
     InferResponseType<typeof endpoint.$delete>,
@@ -59,13 +60,19 @@ export default function TaskDialog(props: Props) {
 
   const onDelete = async () => {
     await deleteMutation.mutateAsync({
-      param: { tag: props.tagId },
+      param: { taskItem: props.itemId },
     })
     alert("ユーザを削除しました")
     window.location.reload()
 
     data.refetch()
   }
+
+  const [name, setName] = useState(data.data.name)
+
+  const [overview, setOverview] = useState(data.data.overview)
+
+  const [tagId, setTagId] = useState(data.data.tag?.id ?? null)
 
   const putMutation = useMutation<
     InferResponseType<typeof endpoint.$put>,
@@ -74,9 +81,11 @@ export default function TaskDialog(props: Props) {
   >({
     async mutationFn() {
       const resp = await endpoint.$put({
-        param: { tag: props.tagId },
+        param: { taskItem: props.itemId },
         json: {
           name: name,
+          overview: overview,
+          tagId: tagId,
         },
       })
 
@@ -86,13 +95,13 @@ export default function TaskDialog(props: Props) {
     },
   })
 
-  const [name, setName] = useState(data.data.name)
-
   const onSubmit = async () => {
     const result = await putMutation.mutateAsync({
-      param: { tag: props.tagId },
+      param: { taskItem: props.itemId },
       json: {
         name: name,
+        overview: overview,
+        tagId: tagId,
       },
     })
 
@@ -115,7 +124,7 @@ export default function TaskDialog(props: Props) {
       {isOpen && (
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{"タグの編集・削除"}</DialogTitle>
+            <DialogTitle>{"当番作業の編集・削除"}</DialogTitle>
           </DialogHeader>
           <div>
             <p>{"削除"}</p>
@@ -135,13 +144,24 @@ export default function TaskDialog(props: Props) {
             <div className="space-y-2">
               <p className="text-sm">{"現在の情報: "}</p>
               <Input
+                placeholder={"現在の当番作業区分"}
+                value={data.data.tag?.name ?? ""}
+                readOnly
+              />
+              <Input
                 placeholder={"現在の当番作業名"}
                 value={data.data.name}
+                readOnly
+              />
+              <Input
+                placeholder={"現在の当番作業説明"}
+                value={data.data.overview ?? ""}
                 readOnly
               />
             </div>
             <div className="space-y-2">
               <p className="text-sm">{"新しい情報: "}</p>
+              <TagsSelect tagId={tagId ?? ""} setTagId={setTagId} />
               <Input
                 placeholder={"新しい当番作業名"}
                 value={name}
@@ -150,6 +170,15 @@ export default function TaskDialog(props: Props) {
                   setName(event.target.value)
                 }}
               />
+              <Input
+                placeholder={"新しい当番作業説明"}
+                value={overview ?? ""}
+                onChange={(event) => {
+                  // 入力値をステートに設定
+                  setOverview(event.target.value)
+                }}
+              />
+              {/* <UsersSelect ownerId={ownerId ?? ""} setOwnerId={setOwnerId} /> */}
               <Button
                 className="w-full"
                 onClick={() => {

@@ -1,6 +1,13 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Card } from "~/components/ui/card"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select"
+import {
   Table,
   TableBody,
   TableCell,
@@ -11,15 +18,19 @@ import {
 import { client } from "~/lib/client"
 import TaskDialog from "~/routes/new.tasks/components/task-dialog"
 
+/**
+ * 連携するタスクを取得する
+ * @returns
+ */
 export default function TaskTable() {
   const data = useSuspenseQuery({
-    queryKey: ["taskItemsTable"],
+    queryKey: ["TaskTable"],
     async queryFn() {
-      const resp = await client.api["task-items"].$get()
+      const resp = await client.api.tags.$get()
 
-      const items = await resp.json()
+      const tags = await resp.json()
 
-      return items
+      return tags
     },
   })
 
@@ -28,21 +39,36 @@ export default function TaskTable() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{""}</TableHead>
-            <TableHead>{"作業区分"}</TableHead>
-            <TableHead>{"作業名"}</TableHead>
-            <TableHead>{"作業説明"}</TableHead>
+            <TableHead className="w-1/5">{""}</TableHead>
+            <TableHead className="w-2/5">{"名前"}</TableHead>
+            <TableHead className="w-2/5">{"作業一覧"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.data.map((task) => (
-            <TableRow key={task.id}>
+          {data.data.map((tag) => (
+            <TableRow key={tag.id}>
               <TableCell>
-                <TaskDialog itemId={task.id} />
+                <TaskDialog tagId={tag.id} />
               </TableCell>
-              <TableCell>{task.tag?.name}</TableCell>
-              <TableCell>{task.name}</TableCell>
-              <TableCell>{task.overview}</TableCell>
+              <TableCell>{tag.name}</TableCell>
+              <TableCell>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="作業一覧" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tag.taskItems.map((taskItem) => (
+                      <SelectItem
+                        key={taskItem.id}
+                        value={taskItem.id}
+                        aria-readonly
+                      >
+                        {taskItem.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

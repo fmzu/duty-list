@@ -1,6 +1,13 @@
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { Card } from "~/components/ui/card"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select"
+import {
   Table,
   TableBody,
   TableCell,
@@ -32,9 +39,9 @@ export default function TagTable() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{""}</TableHead>
-            <TableHead>{"名前"}</TableHead>
-            <TableHead>{"作業一覧"}</TableHead>
+            <TableHead className="w-1/5">{""}</TableHead>
+            <TableHead className="w-2/5">{"名前"}</TableHead>
+            <TableHead className="w-2/5">{"作業一覧"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -44,7 +51,24 @@ export default function TagTable() {
                 <TagDialog tagId={tag.id} />
               </TableCell>
               <TableCell>{tag.name}</TableCell>
-              <TableCell>{tag.name}</TableCell>
+              <TableCell>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="作業一覧" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {tag.taskItems.map((taskItem) => (
+                      <SelectItem
+                        key={taskItem.id}
+                        value={taskItem.id}
+                        aria-readonly
+                      >
+                        {taskItem.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

@@ -26,9 +26,9 @@ export default function UserTable() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>{""}</TableHead>
-            <TableHead>{"ユーザ名"}</TableHead>
-            <TableHead>{"メールアドレス"}</TableHead>
+            <TableHead className="w-1/5">{""}</TableHead>
+            <TableHead className="w-2/5">{"ユーザ名"}</TableHead>
+            <TableHead className="w-2/5">{"メールアドレス"}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
